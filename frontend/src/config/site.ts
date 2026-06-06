@@ -1,0 +1,19 @@
+import { brandConfig } from "@/config/brand";
+
+export const siteConfig = {
+  name: brandConfig.appName,
+  tagline: brandConfig.tagline,
+  description: "DentRay membantu menandai area yang dicurigai sebagai karies dari foto gigi.",
+  apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000",
+  supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+  supabasePublishableKey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ?? "",
+  supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
+  supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
+  navItems: [
+    { href: "/", label: "Beranda" },
+    { href: "/app/scan", label: "Skrining" },
+    { href: "/how-it-works", label: "Cara kerja" },
+    { href: "/about", label: "Tentang" },
+    { href: "/disclaimer", label: "Catatan" }
+  ]
+};
