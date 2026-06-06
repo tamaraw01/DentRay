@@ -1,1 +1,2 @@
 backend/models/dentray_unet_model.keras filter=lfs diff=lfs merge=lfs -text
+hf-dentray-backend/models/dentray_unet_model.keras filter=lfs diff=lfs merge=lfs -text

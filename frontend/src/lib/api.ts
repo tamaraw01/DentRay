@@ -1,7 +1,12 @@
 import { siteConfig } from "@/config/site";
+import { checkHuggingFaceBackend, predictWithHuggingFace } from "@/lib/huggingface-api";
 import type { PredictionResponse } from "@/types/prediction";
 
 export async function getHealth() {
+  if (!siteConfig.configuredApiBaseUrl && siteConfig.aiBackendUrl) {
+    return checkHuggingFaceBackend(siteConfig.aiBackendUrl);
+  }
+
   const response = await fetch(`${siteConfig.apiBaseUrl}/health`, {
     method: "GET",
     headers: {
@@ -28,6 +33,10 @@ function getErrorMessage(payload: unknown, fallback: string) {
 }
 
 export async function predictImage(file: File): Promise<PredictionResponse> {
+  if (!siteConfig.configuredApiBaseUrl && siteConfig.aiBackendUrl) {
+    return predictWithHuggingFace(file, siteConfig.aiBackendUrl);
+  }
+
   const formData = new FormData();
   formData.append("file", file);
 

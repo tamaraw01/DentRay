@@ -7,16 +7,18 @@ DentRay bukan diagnosis dokter. Hasil perlu dikonfirmasi melalui pemeriksaan dok
 ## Stack
 
 - Frontend: Next.js, TypeScript, Tailwind CSS
-- Backend: FastAPI, TensorFlow/Keras, NumPy, Pillow, OpenCV
+- Backend produksi: Hugging Face Spaces, Gradio, TensorFlow/Keras
+- Backend fallback: FastAPI
 - Auth dan data: Supabase
 - Model: U-Net segmentasi karies yang sudah dilatih dari notebook
 
 ## Struktur Utama
 
 ```text
-frontend/   Aplikasi web DentRay
-backend/    API inference U-Net
-supabase/   SQL schema tabel dan RLS
+frontend/             Aplikasi web DentRay
+hf-dentray-backend/   Space Gradio untuk inference publik
+backend/              FastAPI fallback
+supabase/             SQL schema tabel dan RLS
 ```
 
 ## Route Frontend
@@ -34,41 +36,16 @@ supabase/   SQL schema tabel dan RLS
 - `/how-it-works`
 - `/disclaimer`
 
-## Route Backend
+## Backend Produksi
 
-- `GET /health`
-- `POST /predict`
-
-`POST /predict` menerima `multipart/form-data` dengan field `file`.
-
-## Menjalankan Backend
-
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-Backend berjalan di:
+Backend produksi menggunakan Gradio Space tanpa Docker. Endpoint inference publik:
 
 ```text
-http://localhost:8000
+/predict
 ```
 
-Health check:
-
-```bash
-curl http://localhost:8000/health
-```
-
-Tes prediksi:
-
-```bash
-curl -X POST http://localhost:8000/predict \
-  -F "file=@/path/to/foto-gigi.jpg"
-```
+Kode Space berada di `hf-dentray-backend/`. Folder `backend/` tetap tersedia sebagai
+fallback FastAPI lama, tetapi bukan target deployment utama.
 
 ## Menjalankan Frontend
 
@@ -88,7 +65,8 @@ http://localhost:3000
 ## Env Frontend
 
 ```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_API_BASE_URL=
+NEXT_PUBLIC_AI_BACKEND_URL=https://username-space-name.hf.space
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
@@ -96,36 +74,35 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 
 Isi `NEXT_PUBLIC_SUPABASE_URL` dan `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` dari project Supabase. `NEXT_PUBLIC_SUPABASE_ANON_KEY` hanya fallback untuk project lama. Jangan taruh service role key atau secret key di frontend.
 
-## Env Backend
-
-```env
-APP_NAME=DentRay
-APP_ENV=development
-ALLOWED_ORIGINS=http://localhost:3000
-MODEL_PATH=models/dentray_unet_model.keras
-```
+Frontend memakai FastAPI jika `NEXT_PUBLIC_API_BASE_URL` diisi. Jika env tersebut kosong
+dan `NEXT_PUBLIC_AI_BACKEND_URL` tersedia, frontend memakai Hugging Face Gradio.
 
 ## Model U-Net
 
-Letakkan model hasil training notebook di:
+Model produksi Hugging Face berada di:
+
+```text
+hf-dentray-backend/models/dentray_unet_model.keras
+```
+
+Salinan model FastAPI fallback berada di:
 
 ```text
 backend/models/dentray_unet_model.keras
 ```
 
-Format utama backend adalah `.keras`. File `.h5` tidak digunakan jika kosong.
-
-Aplikasi tidak melakukan training model. Backend hanya memuat model `.keras` untuk inference segmentasi karies.
+Aplikasi tidak melakukan training model. Backend hanya memuat model `.keras` dengan
+`compile=False` untuk inference segmentasi karies.
 
 Ukuran model saat ini sekitar 372 MB, sehingga file harus disimpan menggunakan Git LFS jika repository dipush ke GitHub:
 
 ```bash
 git lfs install
-git lfs track "backend/models/dentray_unet_model.keras"
-git add .gitattributes backend/models/dentray_unet_model.keras
+git lfs track "hf-dentray-backend/models/dentray_unet_model.keras"
+git add .gitattributes hf-dentray-backend/models/dentray_unet_model.keras
 ```
 
-Konfigurasi tracking sudah tersedia di `.gitattributes`. Pastikan object Git LFS berhasil terunggah sebelum deploy ke Render.
+Konfigurasi tracking sudah tersedia di `.gitattributes`.
 
 ## Setup Supabase
 
@@ -137,7 +114,7 @@ Konfigurasi tracking sudah tersedia di `.gitattributes`. Pastikan object Git LFS
 ```env
 NEXT_PUBLIC_SUPABASE_URL=...
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_AI_BACKEND_URL=https://username-space-name.hf.space
 ```
 
 Gunakan publishable key dari Supabase Connect atau Settings > API Keys. `NEXT_PUBLIC_SUPABASE_ANON_KEY` boleh diisi hanya jika project masih memakai legacy anon key.
@@ -219,45 +196,24 @@ Proteksi route:
 - Jika belum login, user diarahkan ke `/`.
 - Session disinkronkan dengan cookie Supabase melalui `@supabase/ssr`.
 
-## Deployment Backend ke Render
+## Deployment Backend ke Hugging Face Spaces
 
-Repository sudah memiliki [render.yaml](render.yaml). Blueprint tersebut menggunakan:
+1. Buat Space baru di Hugging Face.
+2. Pilih SDK **Gradio**.
+3. Pilih hardware gratis **CPU Basic**.
+4. Upload seluruh isi folder `hf-dentray-backend/` ke root repository Space.
+5. Pastikan model ada di `models/dentray_unet_model.keras`.
+6. Tunggu build selesai dan status Space menjadi **Running**.
+7. Buka **View API** dan pastikan endpoint `/predict` tersedia.
 
-- Root Directory: `backend`
-- Runtime: Python
-- Python: `3.12`, dipin melalui `backend/.python-version`
-- Build Command: `pip install --upgrade pip && pip install -r requirements.txt`
-- Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-- Health Check: `/health`
-- Region: Singapore
-- Instance: Standard
+Detail lengkap tersedia di
+[hf-dentray-backend/README.md](hf-dentray-backend/README.md).
 
-Instance Standard dipilih karena TensorFlow dan model `.keras` membutuhkan memori lebih besar daripada instance 512 MB. Periksa biaya Render sebelum membuat Blueprint.
+Free Space dapat tidur ketika tidak digunakan. Analisis pertama setelah idle dapat
+membutuhkan waktu lebih lama karena cold start dan proses load model.
 
-Langkah deploy:
-
-1. Push repository beserta object Git LFS model ke GitHub, GitLab, atau Bitbucket.
-2. Di Render pilih **New > Blueprint**.
-3. Hubungkan repository dan gunakan `render.yaml` di root.
-4. Isi `ALLOWED_ORIGINS` dengan origin frontend Vercel, tanpa trailing slash.
-5. Deploy dan tunggu sampai `/health` dapat diakses.
-
-Environment variable Render:
-
-```env
-APP_NAME=DentRay
-APP_ENV=production
-MODEL_PATH=models/dentray_unet_model.keras
-ALLOWED_ORIGINS=https://nama-project.vercel.app
-```
-
-Untuk beberapa origin, pisahkan dengan koma:
-
-```env
-ALLOWED_ORIGINS=https://dentray.example.com,https://nama-project.vercel.app
-```
-
-Render mengisi `PORT` secara otomatis. Jangan membuat nilai `PORT` manual.
+Space perlu dibuat publik agar frontend Vercel dapat memanggil API tanpa token. Source
+code dan model pada Space publik dapat dilihat dan di-clone oleh publik.
 
 ## Deployment Frontend ke Vercel
 
@@ -275,14 +231,17 @@ Di Vercel:
 Environment variable Vercel:
 
 ```env
-NEXT_PUBLIC_API_BASE_URL=https://nama-backend.onrender.com
+NEXT_PUBLIC_API_BASE_URL=
+NEXT_PUBLIC_AI_BACKEND_URL=https://username-space-name.hf.space
 NEXT_PUBLIC_SUPABASE_URL=https://project-ref.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
 ```
 
 `NEXT_PUBLIC_SUPABASE_ANON_KEY` hanya fallback untuk project Supabase lama dan tidak wajib diisi. Jangan pernah memasukkan secret key atau service role key ke Vercel frontend.
 
-Karena model backend menggunakan Git LFS tetapi tidak dibutuhkan frontend, Git LFS dapat dinonaktifkan pada **Vercel Project Settings > Git** agar build frontend tidak mengunduh model.
+Kosongkan atau hapus `NEXT_PUBLIC_API_BASE_URL` agar Hugging Face dipilih sebagai
+backend. Karena model tidak dibutuhkan frontend, Git LFS dapat dinonaktifkan pada
+**Vercel Project Settings > Git** agar build tidak mengunduh file model.
 
 Deploy dari Git dilakukan otomatis setelah push. Untuk deploy manual dari directory frontend:
 
@@ -324,12 +283,10 @@ Uji tampilan pada viewport sekitar `390 x 844` sebelum publikasi.
 
 Backend:
 
-```bash
-curl https://nama-backend.onrender.com/health
-
-curl -X POST https://nama-backend.onrender.com/predict \
-  -F "file=@/path/to/foto-gigi.jpg"
-```
+1. Buka URL Space dan unggah citra contoh.
+2. Pastikan Foto, Mask, Overlay, percentage, dan interpretation muncul.
+3. Buka **View API** dan tes endpoint `/predict`.
+4. Pastikan output terakhir berisi response JSON DentRay.
 
 Frontend:
 
@@ -343,15 +300,14 @@ Frontend:
 8. Buka profil, klik `Keluar`, lalu pastikan `/app` kembali terlindungi.
 9. Uji ulang pada perangkat mobile.
 
-Jika frontend mendapat error CORS, periksa bahwa `ALLOWED_ORIGINS` di Render sama persis dengan origin Vercel.
-
 ## Security Deployment
 
 - File `.env`, `.env.local`, dan variasi environment lain diabaikan oleh `.gitignore`.
 - Hanya `.env.example` yang boleh masuk repository.
 - Secret key dan service role key Supabase tidak digunakan frontend.
-- Jangan commit token Vercel, token Render, password, atau private key.
-- Gunakan environment variables dari dashboard Vercel dan Render.
+- Jangan commit token Vercel, token Hugging Face, password, atau private key.
+- Space publik tidak membutuhkan token Hugging Face pada frontend.
+- Gunakan environment variables dari dashboard Vercel.
 - Gambar skrining tidak disimpan permanen kecuali penyimpanan diaktifkan secara eksplisit.
 
 ## Catatan Privacy
@@ -360,16 +316,13 @@ Jika frontend mendapat error CORS, periksa bahwa `ALLOWED_ORIGINS` di Render sam
 - Riwayat tersimpan jika user login dan fitur riwayat aktif.
 - Storage file gambar permanen belum diaktifkan. Saat ini response gambar dapat disimpan sebagai data URL untuk flow awal.
 
-## Disclaimer Medis
-
-DentRay hanya membantu skrining awal. DentRay bukan pengganti pemeriksaan dokter gigi. Hasil bisa dipengaruhi kualitas foto dan perlu dikonfirmasi oleh dokter gigi.
-
 ## Bagian Manual
 
-- Pastikan `backend/models/dentray_unet_model.keras` terunggah melalui Git LFS.
+- Upload isi `hf-dentray-backend/` ke Space Gradio.
+- Pastikan `hf-dentray-backend/models/dentray_unet_model.keras` terunggah.
 - Isi environment variable Supabase di Vercel.
-- Isi `NEXT_PUBLIC_API_BASE_URL` dengan URL Render.
-- Isi `ALLOWED_ORIGINS` di Render dengan URL Vercel.
+- Isi `NEXT_PUBLIC_AI_BACKEND_URL` dengan URL `.hf.space`.
+- Kosongkan `NEXT_PUBLIC_API_BASE_URL` saat memakai Hugging Face.
 - Atur Site URL dan Redirect URLs di Supabase.
 - Tambahkan contoh dataset ke `frontend/public/examples/tooth-original.png`, `tooth-mask.png`, dan `tooth-overlay.png` jika sudah tersedia.
 - Jika ingin penyimpanan gambar produksi, siapkan Supabase Storage dan ubah helper upload dari data URL ke URL storage.
