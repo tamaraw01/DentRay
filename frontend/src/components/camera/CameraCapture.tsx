@@ -9,7 +9,7 @@ type CameraCaptureProps = {
   onPhotoSelected: (file: File, previewUrl: string) => void;
 };
 
-type CameraState = "idle" | "starting" | "ready" | "captured" | "error";
+type CameraState = "idle" | "starting" | "ready" | "error";
 type FacingMode = "user" | "environment";
 
 function cameraErrorMessage(error: unknown) {
@@ -36,13 +36,9 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const capturedUrlRef = useRef("");
-  const handedOffUrlRef = useRef("");
   const facingModeRef = useRef<FacingMode>("user");
   const [state, setState] = useState<CameraState>("idle");
   const [error, setError] = useState("");
-  const [capturedUrl, setCapturedUrl] = useState("");
-  const [capturedFile, setCapturedFile] = useState<File | null>(null);
   const [facingMode, setFacingMode] = useState<FacingMode>("user");
   const [cameraCount, setCameraCount] = useState(1);
 
@@ -128,9 +124,6 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
     void startCamera();
     return () => {
       stopCamera();
-      if (capturedUrlRef.current && capturedUrlRef.current !== handedOffUrlRef.current) {
-        URL.revokeObjectURL(capturedUrlRef.current);
-      }
     };
   }, [startCamera, stopCamera]);
 
@@ -164,33 +157,14 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
           setError("Foto tidak berhasil dibuat. Coba ambil ulang.");
           return;
         }
-        if (capturedUrl) {
-          URL.revokeObjectURL(capturedUrl);
-        }
         const file = new File([blob], `dentray-camera-${Date.now()}.jpg`, { type: "image/jpeg" });
         const previewUrl = URL.createObjectURL(blob);
-        capturedUrlRef.current = previewUrl;
-        handedOffUrlRef.current = "";
-        setCapturedFile(file);
-        setCapturedUrl(previewUrl);
-        setState("captured");
         stopCamera();
+        onPhotoSelected(file, previewUrl);
       },
       "image/jpeg",
       0.92
     );
-  };
-
-  const retake = () => {
-    if (capturedUrl) {
-      URL.revokeObjectURL(capturedUrl);
-    }
-    capturedUrlRef.current = "";
-    handedOffUrlRef.current = "";
-    setCapturedUrl("");
-    setCapturedFile(null);
-    setError("");
-    void startCamera();
   };
 
   const switchCamera = () => {
@@ -201,28 +175,17 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
     void startCamera(nextMode);
   };
 
-  const usePhoto = () => {
-    if (capturedFile && capturedUrl) {
-      handedOffUrlRef.current = capturedUrl;
-      onPhotoSelected(capturedFile, capturedUrl);
-    }
-  };
-
   return (
     <div className="space-y-4">
       <div className="overflow-hidden rounded-[1.65rem] border border-slate-200 bg-slate-100 shadow-[0_16px_38px_rgba(15,23,42,0.06)]">
         <div className="relative aspect-[3/2]">
-          {state === "captured" && capturedUrl ? (
-            <img alt="Preview foto dari kamera" className="h-full w-full object-contain" src={capturedUrl} />
-          ) : (
-            <video
-              aria-label="Live camera preview"
-              className={`h-full w-full object-cover ${facingMode === "user" ? "scale-x-[-1]" : ""}`}
-              muted
-              playsInline
-              ref={videoRef}
-            />
-          )}
+          <video
+            aria-label="Live camera preview"
+            className={`h-full w-full object-cover ${facingMode === "user" ? "scale-x-[-1]" : ""}`}
+            muted
+            playsInline
+            ref={videoRef}
+          />
           {state === "ready" && (
             <button
               aria-label="Ganti kamera"
@@ -252,25 +215,12 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
       {error && <p className="rounded-2xl bg-red-50 p-3 text-sm leading-6 text-red-700">{error}</p>}
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        {state === "captured" ? (
-          <>
-            <Button disabled={disabled || !capturedFile} onClick={usePhoto} type="button">
-              Gunakan foto
-            </Button>
-            <Button disabled={disabled} onClick={retake} type="button" variant="secondary">
-              Ambil ulang
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button disabled={disabled || state !== "ready"} onClick={capturePhoto} type="button">
-              Ambil foto
-            </Button>
-            <Button disabled={disabled || state === "starting"} onClick={() => void startCamera()} type="button" variant="secondary">
-              Buka kamera
-            </Button>
-          </>
-        )}
+        <Button disabled={disabled || state !== "ready"} onClick={capturePhoto} type="button">
+          Ambil foto
+        </Button>
+        <Button disabled={disabled || state === "starting"} onClick={() => void startCamera()} type="button" variant="secondary">
+          Buka kamera
+        </Button>
       </div>
       <canvas className="hidden" ref={canvasRef} />
     </div>

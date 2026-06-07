@@ -25,7 +25,6 @@ function validateFile(file: File) {
 export function ImageUpload({ disabled = false, onImageSelected }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
-  const [previewUrl, setPreviewUrl] = useState("");
 
   const handleFile = (file: File | undefined) => {
     if (!file) {
@@ -38,12 +37,7 @@ export function ImageUpload({ disabled = false, onImageSelected }: ImageUploadPr
       return;
     }
 
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
-    }
-
     const nextPreviewUrl = URL.createObjectURL(file);
-    setPreviewUrl(nextPreviewUrl);
     setError("");
     onImageSelected(file, nextPreviewUrl);
   };
@@ -59,17 +53,11 @@ export function ImageUpload({ disabled = false, onImageSelected }: ImageUploadPr
           ref={inputRef}
           type="file"
         />
-        {previewUrl ? (
-          <span className="block aspect-[3/2] w-full max-w-xl overflow-hidden rounded-[1.35rem] border border-white/70 bg-clinical-50/70 p-2 shadow-sm">
-            <img alt="Preview upload gambar" className="h-full w-full object-contain" src={previewUrl} />
-          </span>
-        ) : (
-          <span>
-            <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-lg font-extrabold text-clinical-700 shadow-sm ring-1 ring-slate-200">+</span>
-            <span className="block text-base font-bold text-clinical-900">Pilih citra</span>
-            <span className="mt-2 block text-sm leading-6 text-slate-600">JPG, JPEG, atau PNG.</span>
-          </span>
-        )}
+        <span>
+          <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-lg font-extrabold text-clinical-700 shadow-sm ring-1 ring-slate-200">+</span>
+          <span className="block text-base font-bold text-clinical-900">Pilih citra</span>
+          <span className="mt-2 block text-sm leading-6 text-slate-600">JPG, JPEG, atau PNG.</span>
+        </span>
       </label>
 
       {error && <p className="rounded-2xl bg-red-50 p-3 text-sm leading-6 text-red-700">{error}</p>}

@@ -9,11 +9,13 @@ import { signOut } from "@/lib/auth";
 import { listScanSessions } from "@/lib/scan-storage";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 
 export function ProfilePanel() {
   const user = useDentRayUser();
   const router = useRouter();
   const [scanCount, setScanCount] = useState(0);
+  const { isStandalone, showPrompt } = useInstallPrompt();
 
   useEffect(() => {
     void listScanSessions(user).then((sessions) => setScanCount(sessions.length)).catch(() => setScanCount(0));
@@ -47,9 +49,23 @@ export function ProfilePanel() {
         <Card>
           <p className="text-lg font-extrabold text-slate-950">Riksa awal</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">Bukan pengganti pemeriksaan dokter.</p>
-          <p className="mt-3 text-xs leading-5 text-slate-500">Tambahkan ke layar utama untuk memakai DentRay seperti aplikasi.</p>
         </Card>
       </div>
+      <Card>
+        <p className="text-lg font-extrabold text-slate-950">Aplikasi DentRay</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          {isStandalone ? "DentRay sudah terpasang." : "Buka DentRay lebih cepat dari layar utama."}
+        </p>
+        <Button
+          className="mt-4"
+          disabled={isStandalone}
+          onClick={showPrompt}
+          type="button"
+          variant={isStandalone ? "secondary" : "primary"}
+        >
+          {isStandalone ? "DentRay sudah terpasang" : "Pasang DentRay"}
+        </Button>
+      </Card>
       <Button onClick={handleLogout} type="button" variant="secondary">
         Keluar
       </Button>

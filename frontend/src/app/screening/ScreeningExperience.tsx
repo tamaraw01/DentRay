@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { CameraCapture } from "@/components/camera/CameraCapture";
+import { ImageAdjuster } from "@/components/camera/ImageAdjuster";
 import { ResultDashboard } from "@/components/result/ResultDashboard";
 import { BrandLogo } from "@/components/shared/BrandLogo";
 import { Button } from "@/components/ui/Button";
@@ -24,10 +25,19 @@ const inputOptions: Array<{
 
 export function ScreeningExperience() {
   const [mode, setMode] = useState<InputMode>("camera");
+  const [pendingImage, setPendingImage] = useState<SelectedImage | null>(null);
   const [selectedImage, setSelectedImage] = useState<SelectedImage | null>(null);
   const [status, setStatus] = useState<ScreeningStatus>("idle");
   const [result, setResult] = useState<PredictionResponse | null>(null);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    return () => {
+      if (pendingImage?.previewUrl) {
+        URL.revokeObjectURL(pendingImage.previewUrl);
+      }
+    };
+  }, [pendingImage?.previewUrl]);
 
   useEffect(() => {
     return () => {
@@ -37,20 +47,45 @@ export function ScreeningExperience() {
     };
   }, [selectedImage?.previewUrl]);
 
-  const chooseImage = (file: File, previewUrl: string, source: InputMode) => {
+  const beginAdjustment = (file: File, previewUrl: string, source: InputMode) => {
+    if (pendingImage?.previewUrl && pendingImage.previewUrl !== previewUrl) {
+      URL.revokeObjectURL(pendingImage.previewUrl);
+    }
     if (selectedImage?.previewUrl && selectedImage.previewUrl !== previewUrl) {
       URL.revokeObjectURL(selectedImage.previewUrl);
     }
-    setSelectedImage({ file, previewUrl, source });
-    setStatus("ready");
+    setPendingImage({ file, previewUrl, source });
+    setSelectedImage(null);
+    setStatus("idle");
     setResult(null);
     setError("");
   };
 
+  const confirmAdjustment = (file: File, previewUrl: string) => {
+    if (!pendingImage) {
+      URL.revokeObjectURL(previewUrl);
+      return;
+    }
+    setSelectedImage({ file, previewUrl, source: pendingImage.source });
+    setPendingImage(null);
+    setStatus("ready");
+    setError("");
+  };
+
+  const retakeAdjustment = () => {
+    setPendingImage(null);
+    setStatus("idle");
+    setError("");
+  };
+
   const resetFlow = () => {
+    if (pendingImage?.previewUrl) {
+      URL.revokeObjectURL(pendingImage.previewUrl);
+    }
     if (selectedImage?.previewUrl) {
       URL.revokeObjectURL(selectedImage.previewUrl);
     }
+    setPendingImage(null);
     setSelectedImage(null);
     setStatus("idle");
     setResult(null);
@@ -92,30 +127,32 @@ export function ScreeningExperience() {
               <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Scan gigi</h1>
               <p className="mt-3 text-sm leading-6 text-slate-600">Cukup satu foto yang jelas.</p>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                {inputOptions.map((option) => {
-                  const isActive = mode === option.id;
-                  return (
-                    <button
-                      aria-pressed={isActive}
-                      className={`rounded-[1.35rem] border p-4 text-left transition ${
-                        isActive
-                          ? "border-clinical-200 bg-white text-clinical-700 shadow-[0_12px_28px_rgba(37,99,235,0.10)]"
-                          : "border-slate-200 bg-white/70 text-slate-600 hover:border-clinical-200 hover:bg-white"
-                      }`}
-                      key={option.id}
-                      onClick={() => {
-                        setMode(option.id);
-                        setError("");
-                      }}
-                      type="button"
-                    >
-                      <span className="text-lg font-bold">{option.title}</span>
-                      <span className={`mt-1 block text-sm ${isActive ? "text-clinical-600" : "text-slate-500"}`}>{option.body}</span>
-                    </button>
-                  );
-                })}
-              </div>
+              {!pendingImage && !selectedImage && (
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {inputOptions.map((option) => {
+                    const isActive = mode === option.id;
+                    return (
+                      <button
+                        aria-pressed={isActive}
+                        className={`rounded-[1.35rem] border p-4 text-left transition ${
+                          isActive
+                            ? "border-clinical-200 bg-white text-clinical-700 shadow-[0_12px_28px_rgba(37,99,235,0.10)]"
+                            : "border-slate-200 bg-white/70 text-slate-600 hover:border-clinical-200 hover:bg-white"
+                        }`}
+                        key={option.id}
+                        onClick={() => {
+                          setMode(option.id);
+                          setError("");
+                        }}
+                        type="button"
+                      >
+                        <span className="text-lg font-bold">{option.title}</span>
+                        <span className={`mt-1 block text-sm ${isActive ? "text-clinical-600" : "text-slate-500"}`}>{option.body}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               <p className="mt-5 text-sm leading-6 text-slate-500">Bukan pengganti pemeriksaan dokter.</p>
             </div>
@@ -126,11 +163,17 @@ export function ScreeningExperience() {
           <ResultDashboard result={result} onReset={resetFlow} />
         ) : (
           <Card className="rounded-[2rem]">
-            {!selectedImage ? (
+            {pendingImage ? (
+              <ImageAdjuster
+                imageSrc={pendingImage.previewUrl}
+                onConfirm={confirmAdjustment}
+                onRetake={retakeAdjustment}
+              />
+            ) : !selectedImage ? (
               mode === "camera" ? (
-                <CameraCapture disabled={isAnalyzing} onPhotoSelected={(file, previewUrl) => chooseImage(file, previewUrl, "camera")} />
+                <CameraCapture disabled={isAnalyzing} onPhotoSelected={(file, previewUrl) => beginAdjustment(file, previewUrl, "camera")} />
               ) : (
-                <ImageUpload disabled={isAnalyzing} onImageSelected={(file, previewUrl) => chooseImage(file, previewUrl, "upload")} />
+                <ImageUpload disabled={isAnalyzing} onImageSelected={(file, previewUrl) => beginAdjustment(file, previewUrl, "upload")} />
               )
             ) : (
               <div>
