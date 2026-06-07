@@ -45,9 +45,9 @@ export function HistoryDetail({ id }: HistoryDetailProps) {
       <Card>
         <div className="relative z-10">
           <p className="text-sm text-slate-500">{new Date(session.created_at).toLocaleString("id-ID")}</p>
-          <p className="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-clinical-600">Detail skrining</p>
+          <p className="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-clinical-600">Detail hasil</p>
           <h1 className="mt-2 text-3xl font-extrabold text-slate-950">{session.highest_indication}</h1>
-          <p className="mt-3 text-sm leading-6 text-slate-600">{session.total_images} foto dianalisis.</p>
+          <p className="mt-3 text-sm leading-6 text-slate-600">{session.total_images} citra dianalisis.</p>
         </div>
       </Card>
 
@@ -77,7 +77,7 @@ export function HistoryDetail({ id }: HistoryDetailProps) {
         </Card>
       ))}
       <Card className="border-amber-200/70 bg-amber-50/80 shadow-none">
-        <p className="text-sm leading-6 text-amber-900">Hasil awal perlu konfirmasi dokter gigi.</p>
+        <p className="text-sm leading-6 text-amber-900">Hasil ini adalah skrining awal, bukan pengganti pemeriksaan dokter.</p>
       </Card>
     </div>
   );

@@ -66,7 +66,7 @@ export function ImageUpload({ disabled = false, onImageSelected }: ImageUploadPr
         ) : (
           <span>
             <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-lg font-extrabold text-clinical-700 shadow-sm ring-1 ring-slate-200">+</span>
-            <span className="block text-base font-bold text-clinical-900">Pilih gambar</span>
+            <span className="block text-base font-bold text-clinical-900">Pilih citra</span>
             <span className="mt-2 block text-sm leading-6 text-slate-600">JPG, JPEG, atau PNG.</span>
           </span>
         )}
@@ -76,7 +76,7 @@ export function ImageUpload({ disabled = false, onImageSelected }: ImageUploadPr
 
       <div>
         <Button disabled={disabled} onClick={() => inputRef.current?.click()} type="button" variant="secondary">
-          Pilih file
+          Pilih citra
         </Button>
       </div>
     </div>

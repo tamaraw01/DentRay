@@ -8,19 +8,21 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: brandConfig.appName,
     description: "Skrining awal indikasi karies dari foto gigi.",
     start_url: "/",
+    scope: "/",
     display: "standalone",
-    background_color: "#f7faff",
-    theme_color: "#f7faff",
+    orientation: "portrait",
+    background_color: "#F7FAFF",
+    theme_color: "#2563EB",
     icons: [
       {
-        src: brandConfig.iconPath,
-        sizes: "any",
+        src: brandConfig.icon192Path,
+        sizes: "192x192",
         type: "image/png",
         purpose: "any"
       },
       {
-        src: brandConfig.iconPath,
-        sizes: "any",
+        src: brandConfig.icon512Path,
+        sizes: "512x512",
         type: "image/png",
         purpose: "maskable"
       }

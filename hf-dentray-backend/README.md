@@ -1,7 +1,8 @@
 ---
 title: DentRay AI Backend
+emoji: 🦷
 colorFrom: blue
-colorTo: cyan
+colorTo: indigo
 sdk: gradio
 sdk_version: 6.16.0
 python_version: "3.11"

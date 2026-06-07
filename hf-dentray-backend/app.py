@@ -11,7 +11,7 @@ from PIL import Image
 IMAGE_SIZE = (256, 256)
 MASK_THRESHOLD = 0.5
 OVERLAY_ALPHA = 0.45
-MODEL_PATH = Path(__file__).resolve().parent / "models" / "dentray_unet_model.keras"
+MODEL_PATH = Path(__file__).resolve().parent / "dentray_unet_model.keras"
 
 DISCLAIMER = (
     "DentRay adalah alat bantu skrining awal berbasis AI dan bukan pengganti "
@@ -29,7 +29,7 @@ def load_dentray_model() -> Any:
     if not MODEL_PATH.exists() or not MODEL_PATH.is_file() or MODEL_PATH.stat().st_size == 0:
         raise FileNotFoundError(
             "Model DentRay belum ditemukan. Letakkan dentray_unet_model.keras "
-            "di models/dentray_unet_model.keras."
+            "di root Space sebagai dentray_unet_model.keras."
         )
 
     from tensorflow.keras.models import load_model
@@ -158,13 +158,8 @@ def predict(image: Image.Image | None):
     }
 
     return (
-        result["original_image"],
         result["mask_image"],
         result["overlay_image"],
-        result["segmented_area_percentage"],
-        result["interpretation_level"],
-        result["interpretation_text"],
-        result["disclaimer"],
         api_response,
     )
 
@@ -203,38 +198,17 @@ with gr.Blocks(title="DentRay AI Screening") as demo:
     analyze_button = gr.Button("Analisis", variant="primary")
 
     with gr.Row():
-        original_output = gr.Image(label="Foto", type="pil")
         mask_output = gr.Image(label="Mask", type="pil")
         overlay_output = gr.Image(label="Overlay", type="pil")
 
-    with gr.Row():
-        percentage_output = gr.Number(
-            label="Estimasi area tersegmentasi (%)",
-            precision=2,
-        )
-        level_output = gr.Textbox(label="Indikasi visual")
-
-    interpretation_output = gr.Textbox(
-        label="Catatan hasil",
-        lines=3,
-    )
-    disclaimer_output = gr.Textbox(
-        label="Catatan medis",
-        lines=2,
-    )
     json_output = gr.JSON(label="Response JSON", visible=False)
 
     analyze_button.click(
         fn=predict,
         inputs=[image_input],
         outputs=[
-            original_output,
             mask_output,
             overlay_output,
-            percentage_output,
-            level_output,
-            interpretation_output,
-            disclaimer_output,
             json_output,
         ],
         api_name="predict",

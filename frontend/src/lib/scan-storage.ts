@@ -38,7 +38,7 @@ function writeLocal<T>(key: string, value: T[]) {
 
 export async function saveScanSession(user: DentRayUser | null, results: ScanResultItem[]) {
   const highestIndication = getHighestIndication(results);
-  const summary = `${results.length} foto. ${highestIndication}.`;
+  const summary = `${results.length} citra. ${highestIndication}.`;
 
   if (isSupabaseConfigured() && user) {
     const session = await createScanSession({

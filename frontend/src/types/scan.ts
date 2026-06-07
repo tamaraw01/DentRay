@@ -1,22 +1,9 @@
 import type { PredictionResponse } from "@/types/prediction";
 
-export type ScanViewType = "front" | "left" | "right" | "upper" | "lower";
-
-export type ScanView = {
-  id: ScanViewType;
-  title: string;
-  instruction: string;
-};
-
-export type ScanViewCapture = {
-  viewType: ScanViewType;
-  title: string;
-  file: File;
-  previewUrl: string;
-};
+export type ScanImageType = "single";
 
 export type ScanResultItem = {
-  viewType: ScanViewType;
+  viewType: ScanImageType;
   title: string;
   result: PredictionResponse;
 };

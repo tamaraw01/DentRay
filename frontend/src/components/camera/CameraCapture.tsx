@@ -10,6 +10,7 @@ type CameraCaptureProps = {
 };
 
 type CameraState = "idle" | "starting" | "ready" | "captured" | "error";
+type FacingMode = "user" | "environment";
 
 function cameraErrorMessage(error: unknown) {
   if (error instanceof DOMException) {
@@ -18,6 +19,9 @@ function cameraErrorMessage(error: unknown) {
     }
     if (error.name === "NotFoundError") {
       return "Kamera tidak ditemukan pada perangkat ini. Gunakan upload gambar sebagai alternatif.";
+    }
+    if (error.name === "NotReadableError") {
+      return "Kamera sedang dipakai aplikasi lain. Tutup aplikasi tersebut lalu coba lagi.";
     }
   }
 
@@ -34,17 +38,23 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
   const streamRef = useRef<MediaStream | null>(null);
   const capturedUrlRef = useRef("");
   const handedOffUrlRef = useRef("");
+  const facingModeRef = useRef<FacingMode>("user");
   const [state, setState] = useState<CameraState>("idle");
   const [error, setError] = useState("");
   const [capturedUrl, setCapturedUrl] = useState("");
   const [capturedFile, setCapturedFile] = useState<File | null>(null);
+  const [facingMode, setFacingMode] = useState<FacingMode>("user");
+  const [cameraCount, setCameraCount] = useState(1);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
   }, []);
 
-  const startCamera = useCallback(async () => {
+  const startCamera = useCallback(async (requestedMode: FacingMode = facingModeRef.current) => {
     if (!navigator.mediaDevices?.getUserMedia) {
       setError("Browser belum mendukung kamera langsung. Gunakan upload gambar.");
       setState("error");
@@ -56,19 +66,55 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
 
     try {
       stopCamera();
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: "environment" },
-          width: { ideal: 1280 },
-          height: { ideal: 960 }
-        },
-        audio: false
-      });
+      const openCamera = (mode: FacingMode) =>
+        navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { ideal: mode },
+            width: { ideal: 1280 },
+            height: { ideal: 960 }
+          },
+          audio: false
+        });
+
+      let activeMode = requestedMode;
+      let stream: MediaStream;
+
+      try {
+        stream = await openCamera(requestedMode);
+      } catch (initialError) {
+        const canFallback =
+          requestedMode === "user" &&
+          initialError instanceof DOMException &&
+          ["NotFoundError", "OverconstrainedError"].includes(initialError.name);
+
+        if (!canFallback) {
+          throw initialError;
+        }
+
+        activeMode = "environment";
+        stream = await openCamera(activeMode);
+      }
+
       streamRef.current = stream;
+      const reportedMode = stream.getVideoTracks()[0]?.getSettings().facingMode;
+      if (reportedMode === "user" || reportedMode === "environment") {
+        activeMode = reportedMode;
+      }
+      facingModeRef.current = activeMode;
+      setFacingMode(activeMode);
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play();
       }
+
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        setCameraCount(devices.filter((device) => device.kind === "videoinput").length);
+      } catch {
+        setCameraCount(1);
+      }
+
       setState("ready");
     } catch (cameraError) {
       setError(cameraErrorMessage(cameraError));
@@ -105,7 +151,13 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
       return;
     }
 
+    context.save();
+    if (facingModeRef.current === "user") {
+      context.translate(canvas.width, 0);
+      context.scale(-1, 1);
+    }
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    context.restore();
     canvas.toBlob(
       (blob) => {
         if (!blob) {
@@ -141,6 +193,14 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
     void startCamera();
   };
 
+  const switchCamera = () => {
+    const nextMode: FacingMode = facingModeRef.current === "user" ? "environment" : "user";
+    facingModeRef.current = nextMode;
+    setFacingMode(nextMode);
+    setError("");
+    void startCamera(nextMode);
+  };
+
   const usePhoto = () => {
     if (capturedFile && capturedUrl) {
       handedOffUrlRef.current = capturedUrl;
@@ -157,18 +217,29 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
           ) : (
             <video
               aria-label="Live camera preview"
-              className="h-full w-full object-cover"
+              className={`h-full w-full object-cover ${facingMode === "user" ? "scale-x-[-1]" : ""}`}
               muted
               playsInline
               ref={videoRef}
             />
+          )}
+          {state === "ready" && (
+            <button
+              aria-label="Ganti kamera"
+              className="absolute right-4 top-4 rounded-full border border-white/80 bg-white/85 px-3 py-2 text-xs font-bold text-slate-700 shadow-sm backdrop-blur transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500"
+              onClick={switchCamera}
+              title={cameraCount > 1 ? "Ganti kamera" : "Coba kamera lain"}
+              type="button"
+            >
+              Ganti kamera
+            </button>
           )}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div className="h-[54%] w-[76%] rounded-[1.8rem] border border-white shadow-[0_0_0_999px_rgba(15,23,42,0.12),0_0_28px_rgba(96,165,250,0.20)]" />
           </div>
           <div className="pointer-events-none absolute inset-x-8 top-1/2 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
           <p className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/80 bg-white/82 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur">
-            Posisikan gigi di dalam frame.
+            Letakkan gigi di dalam frame.
           </p>
           {state === "starting" && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/80 text-sm font-semibold text-slate-700 backdrop-blur">
@@ -184,7 +255,7 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
         {state === "captured" ? (
           <>
             <Button disabled={disabled || !capturedFile} onClick={usePhoto} type="button">
-              Gunakan Foto Ini
+              Gunakan foto
             </Button>
             <Button disabled={disabled} onClick={retake} type="button" variant="secondary">
               Ambil ulang
@@ -195,7 +266,7 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
             <Button disabled={disabled || state !== "ready"} onClick={capturePhoto} type="button">
               Ambil foto
             </Button>
-            <Button disabled={disabled || state === "starting"} onClick={startCamera} type="button" variant="secondary">
+            <Button disabled={disabled || state === "starting"} onClick={() => void startCamera()} type="button" variant="secondary">
               Buka kamera
             </Button>
           </>

@@ -1,5 +1,5 @@
 import { AppShell } from "@/components/app/AppShell";
-import { MultiViewScan } from "@/components/scan/MultiViewScan";
+import { SingleImageScan } from "@/components/scan/SingleImageScan";
 
 export const metadata = {
   title: "Skrining"
@@ -8,7 +8,7 @@ export const metadata = {
 export default function ScanPage() {
   return (
     <AppShell>
-      <MultiViewScan />
+      <SingleImageScan />
     </AppShell>
   );
 }

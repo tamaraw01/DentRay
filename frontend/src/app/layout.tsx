@@ -18,6 +18,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
+  applicationName: brandConfig.appName,
   title: {
     default: brandConfig.appName,
     template: `%s | ${brandConfig.appName}`
@@ -33,14 +34,17 @@ export const metadata: Metadata = {
     telephone: false
   },
   icons: {
-    apple: brandConfig.iconPath,
-    icon: brandConfig.iconPath,
-    shortcut: brandConfig.iconPath
+    apple: [{ url: brandConfig.icon192Path, sizes: "192x192", type: "image/png" }],
+    icon: [
+      { url: brandConfig.icon192Path, sizes: "192x192", type: "image/png" },
+      { url: brandConfig.icon512Path, sizes: "512x512", type: "image/png" }
+    ],
+    shortcut: brandConfig.icon192Path
   }
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f7faff",
+  themeColor: "#2563EB",
   width: "device-width",
   initialScale: 1
 };

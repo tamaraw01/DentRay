@@ -41,12 +41,13 @@ export function ProfilePanel() {
       </Card>
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
-          <p className="text-sm font-bold text-slate-500">Jumlah skrining</p>
+          <p className="text-sm font-bold text-slate-500">Hasil tersimpan</p>
           <p className="mt-2 text-4xl font-bold tracking-[-0.04em] text-clinical-700">{scanCount}</p>
         </Card>
         <Card>
-          <p className="text-lg font-extrabold text-slate-950">Skrining awal</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Hasil perlu konfirmasi dokter gigi.</p>
+          <p className="text-lg font-extrabold text-slate-950">Riksa awal</p>
+          <p className="mt-2 text-sm leading-6 text-slate-600">Bukan pengganti pemeriksaan dokter.</p>
+          <p className="mt-3 text-xs leading-5 text-slate-500">Tambahkan ke layar utama untuk memakai DentRay seperti aplikasi.</p>
         </Card>
       </div>
       <Button onClick={handleLogout} type="button" variant="secondary">

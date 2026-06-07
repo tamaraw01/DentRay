@@ -18,8 +18,8 @@ const inputOptions: Array<{
   title: string;
   body: string;
 }> = [
-  { id: "camera", title: "Kamera", body: "Ambil foto langsung." },
-  { id: "upload", title: "Upload", body: "Pilih dari galeri." }
+  { id: "camera", title: "Kamera", body: "Ambil citra langsung." },
+  { id: "upload", title: "Upload", body: "Pilih citra dari galeri." }
 ];
 
 export function ScreeningExperience() {
@@ -88,38 +88,36 @@ export function ScreeningExperience() {
 
           <div className="m-3 rounded-[1.6rem] border border-slate-100 bg-slate-50/80 p-5 sm:m-4 sm:p-7">
             <div className="relative z-10">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Skrining awal</p>
-            <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Pilih cara foto.</h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">Kamera atau galeri.</p>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Riksa awal</p>
+              <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Scan gigi</h1>
+              <p className="mt-3 text-sm leading-6 text-slate-600">Cukup satu foto yang jelas.</p>
 
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              {inputOptions.map((option) => {
-                const isActive = mode === option.id;
-                return (
-                  <button
-                    aria-pressed={isActive}
-                    className={`rounded-[1.35rem] border p-4 text-left transition ${
-                      isActive
-                        ? "border-clinical-200 bg-white text-clinical-700 shadow-[0_12px_28px_rgba(37,99,235,0.10)]"
-                        : "border-slate-200 bg-white/70 text-slate-600 hover:border-clinical-200 hover:bg-white"
-                    }`}
-                    key={option.id}
-                    onClick={() => {
-                      setMode(option.id);
-                      setError("");
-                    }}
-                    type="button"
-                  >
-                    <span className="text-lg font-bold">{option.title}</span>
-                    <span className={`mt-1 block text-sm ${isActive ? "text-clinical-600" : "text-slate-500"}`}>{option.body}</span>
-                  </button>
-                );
-              })}
-            </div>
+              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                {inputOptions.map((option) => {
+                  const isActive = mode === option.id;
+                  return (
+                    <button
+                      aria-pressed={isActive}
+                      className={`rounded-[1.35rem] border p-4 text-left transition ${
+                        isActive
+                          ? "border-clinical-200 bg-white text-clinical-700 shadow-[0_12px_28px_rgba(37,99,235,0.10)]"
+                          : "border-slate-200 bg-white/70 text-slate-600 hover:border-clinical-200 hover:bg-white"
+                      }`}
+                      key={option.id}
+                      onClick={() => {
+                        setMode(option.id);
+                        setError("");
+                      }}
+                      type="button"
+                    >
+                      <span className="text-lg font-bold">{option.title}</span>
+                      <span className={`mt-1 block text-sm ${isActive ? "text-clinical-600" : "text-slate-500"}`}>{option.body}</span>
+                    </button>
+                  );
+                })}
+              </div>
 
-            <p className="mt-5 rounded-2xl border border-slate-100 bg-white px-4 py-3 text-sm leading-6 text-slate-600">
-              Hasil awal perlu konfirmasi dokter.
-            </p>
+              <p className="mt-5 text-sm leading-6 text-slate-500">Bukan pengganti pemeriksaan dokter.</p>
             </div>
           </div>
         </Card>
@@ -128,27 +126,27 @@ export function ScreeningExperience() {
           <ResultDashboard result={result} onReset={resetFlow} />
         ) : (
           <Card className="rounded-[2rem]">
-            {mode === "camera" ? (
-              <CameraCapture disabled={isAnalyzing} onPhotoSelected={(file, previewUrl) => chooseImage(file, previewUrl, "camera")} />
+            {!selectedImage ? (
+              mode === "camera" ? (
+                <CameraCapture disabled={isAnalyzing} onPhotoSelected={(file, previewUrl) => chooseImage(file, previewUrl, "camera")} />
+              ) : (
+                <ImageUpload disabled={isAnalyzing} onImageSelected={(file, previewUrl) => chooseImage(file, previewUrl, "upload")} />
+              )
             ) : (
-              <ImageUpload disabled={isAnalyzing} onImageSelected={(file, previewUrl) => chooseImage(file, previewUrl, "upload")} />
-            )}
-
-            {selectedImage && (
-              <div className="mt-5 border-t border-slate-100 pt-5">
+              <div>
                 <div className="grid gap-4 lg:grid-cols-[0.8fr_1fr] lg:items-center">
                   <div className="aspect-[3/2] w-full overflow-hidden rounded-[1.4rem] border border-clinical-100 bg-clinical-50">
-                    <img alt="Preview foto" className="h-full w-full object-contain" src={selectedImage.previewUrl} />
+                    <img alt="Citra gigi yang dipilih" className="h-full w-full object-contain" src={selectedImage.previewUrl} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Periksa foto</p>
-                    <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Foto siap</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan foto terlihat jelas.</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Periksa citra</p>
+                    <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Citra siap</h2>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
                     {error && <p className="mt-4 rounded-2xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-                    {isAnalyzing && <p className="mt-4 rounded-2xl bg-clinical-50 p-3 text-sm font-semibold text-clinical-800">DentRay sedang membaca gambar…</p>}
+                    {isAnalyzing && <p className="mt-4 rounded-2xl bg-clinical-50 p-3 text-sm font-semibold text-clinical-800">DentRay sedang membaca citra...</p>}
                     <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                       <Button disabled={isAnalyzing} onClick={analyze} type="button">
-                        {isAnalyzing ? "Membaca gambar…" : "Analisis"}
+                        {isAnalyzing ? "Membaca citra..." : "Analisis"}
                       </Button>
                       <Button disabled={isAnalyzing} onClick={resetFlow} type="button" variant="secondary">
                         Ambil ulang
