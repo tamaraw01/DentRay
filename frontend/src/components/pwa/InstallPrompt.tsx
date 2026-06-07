@@ -4,10 +4,12 @@ import { usePathname } from "next/navigation";
 
 import { BrandLogo } from "@/components/shared/BrandLogo";
 import { Button } from "@/components/ui/Button";
+import { useAppUpdate } from "@/hooks/useAppUpdate";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 
 export function InstallPrompt() {
   const pathname = usePathname();
+  const { isUpdateAvailable } = useAppUpdate();
   const {
     canAutoInstall,
     dismissPrompt,
@@ -16,7 +18,7 @@ export function InstallPrompt() {
     isVisible
   } = useInstallPrompt();
 
-  if (!isVisible) {
+  if (!isVisible || isUpdateAvailable) {
     return null;
   }
 
