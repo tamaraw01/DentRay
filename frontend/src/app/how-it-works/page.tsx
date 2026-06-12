@@ -12,8 +12,8 @@ const workflow = [
     body: "Gunakan kamera atau galeri."
   },
   {
-    title: "AI membuat mask",
-    body: "Model memproses gambar."
+    title: "AI memproses citra",
+    body: "DentRay membaca area visual."
   },
   {
     title: "Overlay menandai area",

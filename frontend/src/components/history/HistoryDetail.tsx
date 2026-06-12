@@ -46,33 +46,24 @@ export function HistoryDetail({ id }: HistoryDetailProps) {
         <div className="relative z-10">
           <p className="text-sm text-slate-500">{new Date(session.created_at).toLocaleString("id-ID")}</p>
           <p className="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-clinical-600">Detail hasil</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-slate-950">{session.highest_indication}</h1>
+          <h1 className="mt-2 text-3xl font-extrabold text-slate-950">Hasil skrining</h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">{session.total_images} citra dianalisis.</p>
         </div>
       </Card>
 
       {results.map((result) => (
         <Card key={result.id}>
-          <h2 className="text-xl font-extrabold text-slate-950">{result.view_type}</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-600">{result.interpretation_text ?? "Hasil skrining awal tersimpan."}</p>
-          <p className="mt-3 text-sm font-bold text-clinical-800">
-            Estimasi area tersegmentasi: {result.segmented_area_percentage === null ? "-" : `${Number(result.segmented_area_percentage).toFixed(2)}%`}
-          </p>
-          <div className="mt-4 grid gap-3 md:grid-cols-3">
-            {[
-              ["Foto", result.original_image_url],
-              ["Overlay", result.overlay_image_url],
-              ["Mask", result.mask_image_url]
-            ].map(([label, src]) => (
-              <div className={label === "Overlay" ? "rounded-[1.35rem] border border-clinical-200 bg-white/72 p-3 shadow-glow" : "rounded-[1.35rem] border border-white/70 bg-white/60 p-3"} key={label}>
-                {src ? (
-                  <div className="aspect-[3/2] overflow-hidden rounded-xl bg-clinical-50/70">
-                    <img alt={`${label} ${result.view_type}`} className="h-full w-full object-contain" src={src} />
-                  </div>
-                ) : null}
-                <p className="mt-2 text-sm font-bold text-slate-700">{label}</p>
+          <h2 className="text-xl font-extrabold text-slate-950">Overlay</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">Area yang ditandai tampil pada citra hasil.</p>
+          <div className="mt-4 rounded-[1.35rem] border border-clinical-200 bg-white p-3 shadow-[0_16px_38px_rgba(37,99,235,0.08)]">
+            {result.overlay_image_url ? (
+              <div className="flex max-h-[70svh] items-center justify-center overflow-hidden rounded-xl bg-clinical-50/70 p-2">
+                <img alt="Overlay hasil skrining" className="h-auto max-h-[68svh] w-auto max-w-full object-contain" src={result.overlay_image_url} />
               </div>
-            ))}
+            ) : (
+              <p className="p-4 text-sm text-slate-500">Overlay tidak tersedia.</p>
+            )}
+            <p className="mt-2 text-sm font-bold text-slate-700">Overlay</p>
           </div>
         </Card>
       ))}

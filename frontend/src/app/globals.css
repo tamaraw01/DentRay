@@ -27,7 +27,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 body {
@@ -77,12 +77,9 @@ a {
     box-shadow:
       0 18px 50px rgba(15, 23, 42, 0.06),
       inset 0 1px 0 rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
     transition:
-      transform 180ms ease,
       box-shadow 180ms ease,
-      border-color 180ms ease,
-      background 180ms ease;
+      border-color 180ms ease;
   }
 
   .glass-card:hover {
@@ -110,9 +107,8 @@ a {
 
   .app-frame {
     border: 1px solid rgba(226, 232, 240, 0.78);
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.78);
     box-shadow: 0 24px 80px rgba(15, 23, 42, 0.06);
-    backdrop-filter: blur(24px);
   }
 
   .dark .app-frame {
@@ -155,4 +151,98 @@ a {
 }
 
 @layer utilities {
+}
+
+@keyframes dentray-mascot-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes dentray-tooth-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes dentray-tooth-glow {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: scale(0.9);
+  }
+  50% {
+    opacity: 0.62;
+    transform: scale(1);
+  }
+}
+
+@keyframes dentray-scan {
+  0% {
+    opacity: 0;
+    transform: translateY(-28px);
+  }
+  18%,
+  82% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+}
+
+@keyframes dentray-loading-dot {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.dentray-mascot-float {
+  animation: dentray-mascot-float 3.2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.dentray-tooth-float {
+  animation: dentray-tooth-float 2.6s ease-in-out infinite;
+  will-change: transform;
+}
+
+.dentray-tooth-glow {
+  animation: dentray-tooth-glow 2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.dentray-scan-line {
+  animation: dentray-scan 2.2s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.dentray-loading-dot {
+  animation: dentray-loading-dot 1s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dentray-mascot-float,
+  .dentray-tooth-float,
+  .dentray-tooth-glow,
+  .dentray-scan-line,
+  .dentray-loading-dot {
+    animation: none;
+    will-change: auto;
+  }
 }

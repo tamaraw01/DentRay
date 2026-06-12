@@ -17,8 +17,6 @@
   },
   "dependencies": {
     "@gradio/client": "^2.2.1",
-    "@react-three/drei": "^10.7.7",
-    "@react-three/fiber": "^9.6.1",
     "@supabase/ssr": "^0.10.3",
     "@supabase/supabase-js": "^2.107.0",
     "clsx": "^2.1.1",
@@ -26,8 +24,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-easy-crop": "^5.5.7",
-    "tailwind-merge": "^2.6.0",
-    "three": "^0.184.0"
+    "tailwind-merge": "^2.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.17.16",

@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 
 import { CameraCapture } from "@/components/camera/CameraCapture";
 import { ImageAdjuster } from "@/components/camera/ImageAdjuster";
+import { DentRayLoading } from "@/components/loading/DentRayLoading";
 import { ResultDashboard } from "@/components/result/ResultDashboard";
 import { BrandLogo } from "@/components/shared/BrandLogo";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ImageUpload } from "@/components/upload/ImageUpload";
 import { predictImage } from "@/lib/api";
+import { prepareImageForInference } from "@/lib/image/prepareImageForInference";
 import type { PredictionResponse, ScreeningStatus, SelectedImage } from "@/types/prediction";
 
 type InputMode = "camera" | "upload";
@@ -20,7 +22,7 @@ const inputOptions: Array<{
   body: string;
 }> = [
   { id: "camera", title: "Kamera", body: "Ambil citra langsung." },
-  { id: "upload", title: "Upload", body: "Pilih citra dari galeri." }
+  { id: "upload", title: "Upload", body: "Pilih foto dari galeri." }
 ];
 
 export function ScreeningExperience() {
@@ -101,7 +103,8 @@ export function ScreeningExperience() {
     setError("");
 
     try {
-      const prediction = await predictImage(selectedImage.file);
+      const inferenceFile = await prepareImageForInference(selectedImage.file);
+      const prediction = await predictImage(inferenceFile);
       setResult(prediction);
       setStatus("result");
     } catch (analysisError) {
@@ -171,25 +174,30 @@ export function ScreeningExperience() {
               />
             ) : !selectedImage ? (
               mode === "camera" ? (
-                <CameraCapture disabled={isAnalyzing} onPhotoSelected={(file, previewUrl) => beginAdjustment(file, previewUrl, "camera")} />
+                <CameraCapture
+                  disabled={isAnalyzing}
+                  onPhotoSelected={(file, previewUrl) => beginAdjustment(file, previewUrl, "camera")}
+                  onUploadRequested={() => setMode("upload")}
+                />
               ) : (
                 <ImageUpload disabled={isAnalyzing} onImageSelected={(file, previewUrl) => beginAdjustment(file, previewUrl, "upload")} />
               )
+            ) : isAnalyzing ? (
+              <DentRayLoading message="Membaca citra" variant="scan" />
             ) : (
               <div>
                 <div className="grid gap-4 lg:grid-cols-[0.8fr_1fr] lg:items-center">
-                  <div className="aspect-[3/2] w-full overflow-hidden rounded-[1.4rem] border border-clinical-100 bg-clinical-50">
-                    <img alt="Citra gigi yang dipilih" className="h-full w-full object-contain" src={selectedImage.previewUrl} />
+                  <div className="flex max-h-[34rem] w-full items-center justify-center overflow-hidden rounded-[1.4rem] border border-clinical-100 bg-clinical-50 p-2">
+                    <img alt="Citra gigi yang dipilih" className="h-auto max-h-[33rem] w-auto max-w-full object-contain" src={selectedImage.previewUrl} />
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Periksa citra</p>
                     <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Citra siap</h2>
                     <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
                     {error && <p className="mt-4 rounded-2xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
-                    {isAnalyzing && <p className="mt-4 rounded-2xl bg-clinical-50 p-3 text-sm font-semibold text-clinical-800">DentRay sedang membaca citra...</p>}
                     <div className="mt-5 flex flex-col gap-3 sm:flex-row">
                       <Button disabled={isAnalyzing} onClick={analyze} type="button">
-                        {isAnalyzing ? "Membaca citra..." : "Analisis"}
+                        Analisis
                       </Button>
                       <Button disabled={isAnalyzing} onClick={resetFlow} type="button" variant="secondary">
                         Ambil ulang

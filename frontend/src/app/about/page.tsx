@@ -10,7 +10,7 @@ export default function AboutPage() {
     <Section
       eyebrow="Tentang DentRay"
       title="Skrining gigi cerdas"
-      description="Cek indikasi karies dari foto HP."
+      description="Lihat area yang ditandai dari foto gigi."
     >
       <div className="grid gap-5 md:grid-cols-[1.05fr_0.95fr]">
         <Card className="dark-med-panel">

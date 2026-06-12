@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: brandConfig.appName,
     short_name: brandConfig.appName,
-    description: "Skrining awal indikasi karies dari foto gigi.",
+    description: "Skrining awal area visual dari foto gigi.",
     start_url: "/",
     scope: "/",
     display: "standalone",

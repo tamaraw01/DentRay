@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 type CameraCaptureProps = {
   disabled?: boolean;
   onPhotoSelected: (file: File, previewUrl: string) => void;
+  onUploadRequested?: () => void;
 };
 
 type CameraState = "idle" | "starting" | "ready" | "error";
@@ -32,7 +33,7 @@ function cameraErrorMessage(error: unknown) {
   return "Kamera belum dapat dibuka. Coba ulangi atau gunakan upload gambar.";
 }
 
-export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptureProps) {
+export function CameraCapture({ disabled = false, onPhotoSelected, onUploadRequested }: CameraCaptureProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -177,8 +178,12 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-[1.65rem] border border-slate-200 bg-slate-100 shadow-[0_16px_38px_rgba(15,23,42,0.06)]">
-        <div className="relative aspect-[3/2]">
+      <div>
+        <h2 className="text-xl font-bold tracking-[-0.025em] text-slate-950">Ambil foto</h2>
+        <p className="mt-1 text-sm text-slate-600">Posisikan gigi di dalam frame.</p>
+      </div>
+      <div className="overflow-hidden rounded-[1.65rem] border border-slate-200 bg-slate-100 shadow-[0_14px_34px_rgba(15,23,42,0.05)]">
+        <div className="relative aspect-[3/4] sm:aspect-[4/3]">
           <video
             aria-label="Live camera preview"
             className={`h-full w-full object-cover ${facingMode === "user" ? "scale-x-[-1]" : ""}`}
@@ -189,7 +194,7 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
           {state === "ready" && (
             <button
               aria-label="Ganti kamera"
-              className="absolute right-4 top-4 rounded-full border border-white/80 bg-white/85 px-3 py-2 text-xs font-bold text-slate-700 shadow-sm backdrop-blur transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500"
+              className="absolute right-3 top-3 rounded-full border border-white/80 bg-white/95 px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500"
               onClick={switchCamera}
               title={cameraCount > 1 ? "Ganti kamera" : "Coba kamera lain"}
               type="button"
@@ -198,29 +203,31 @@ export function CameraCapture({ disabled = false, onPhotoSelected }: CameraCaptu
             </button>
           )}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <div className="h-[54%] w-[76%] rounded-[1.8rem] border border-white shadow-[0_0_0_999px_rgba(15,23,42,0.12),0_0_28px_rgba(96,165,250,0.20)]" />
+            <div className="h-[58%] w-[82%] rounded-[1.5rem] border border-white/90 shadow-[0_0_0_999px_rgba(15,23,42,0.13)] sm:h-[62%] sm:w-[76%]" />
           </div>
-          <div className="pointer-events-none absolute inset-x-8 top-1/2 h-px bg-gradient-to-r from-transparent via-white/80 to-transparent" />
-          <p className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/80 bg-white/82 px-3 py-1 text-xs font-semibold text-slate-600 shadow-sm backdrop-blur">
-            Letakkan gigi di dalam frame.
-          </p>
           {state === "starting" && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/80 text-sm font-semibold text-slate-700 backdrop-blur">
+            <div className="absolute inset-0 flex items-center justify-center bg-white/90 text-sm font-semibold text-slate-700">
               Membuka kamera...
             </div>
           )}
         </div>
       </div>
+      <p className="text-sm text-slate-500">Gunakan pencahayaan yang cukup.</p>
 
       {error && <p className="rounded-2xl bg-red-50 p-3 text-sm leading-6 text-red-700">{error}</p>}
 
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="grid gap-3 sm:grid-cols-3">
         <Button disabled={disabled || state !== "ready"} onClick={capturePhoto} type="button">
           Ambil foto
         </Button>
-        <Button disabled={disabled || state === "starting"} onClick={() => void startCamera()} type="button" variant="secondary">
-          Buka kamera
+        <Button disabled={disabled || state === "starting"} onClick={switchCamera} type="button" variant="secondary">
+          Ganti kamera
         </Button>
+        {onUploadRequested && (
+          <Button disabled={disabled} onClick={onUploadRequested} type="button" variant="ghost">
+            Upload foto
+          </Button>
+        )}
       </div>
       <canvas className="hidden" ref={canvasRef} />
     </div>

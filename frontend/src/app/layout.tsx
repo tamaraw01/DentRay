@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     default: brandConfig.appName,
     template: `%s | ${brandConfig.appName}`
   },
-  description: "Skrining awal indikasi karies dari foto gigi.",
+  description: "Skrining awal area visual dari foto gigi.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

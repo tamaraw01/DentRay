@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import Cropper, { type Area } from "react-easy-crop";
+import Cropper, { type Area, type MediaSize } from "react-easy-crop";
 
 import { Button } from "@/components/ui/Button";
 import { createCroppedImage } from "@/lib/image";
@@ -15,22 +15,28 @@ type ImageAdjusterProps = {
 
 const initialCrop = { x: 0, y: 0 };
 
-export function ImageAdjuster({ aspectRatio = 3 / 2, imageSrc, onConfirm, onRetake }: ImageAdjusterProps) {
+export function ImageAdjuster({ aspectRatio, imageSrc, onConfirm, onRetake }: ImageAdjusterProps) {
   const [crop, setCrop] = useState(initialCrop);
   const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
+  const [sourceAspectRatio, setSourceAspectRatio] = useState(4 / 3);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState("");
+  const activeAspectRatio = aspectRatio ?? sourceAspectRatio;
 
   const handleCropComplete = useCallback((_croppedArea: Area, nextCroppedAreaPixels: Area) => {
     setCroppedAreaPixels(nextCroppedAreaPixels);
   }, []);
 
+  const handleMediaLoaded = useCallback((mediaSize: MediaSize) => {
+    if (mediaSize.naturalWidth > 0 && mediaSize.naturalHeight > 0) {
+      setSourceAspectRatio(mediaSize.naturalWidth / mediaSize.naturalHeight);
+    }
+  }, []);
+
   function resetAdjustment() {
     setCrop(initialCrop);
     setZoom(1);
-    setRotation(0);
     setError("");
   }
 
@@ -46,7 +52,7 @@ export function ImageAdjuster({ aspectRatio = 3 / 2, imageSrc, onConfirm, onReta
       const file = await createCroppedImage(
         imageSrc,
         croppedAreaPixels,
-        rotation,
+        0,
         `dentray-adjusted-${Date.now()}.jpg`
       );
       onConfirm(file, URL.createObjectURL(file));
@@ -63,21 +69,23 @@ export function ImageAdjuster({ aspectRatio = 3 / 2, imageSrc, onConfirm, onReta
         <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950" id="image-adjuster-title">
           Sesuaikan foto
         </h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">Tempatkan gigi di dalam frame.</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
       </div>
 
-      <div className="relative aspect-[3/2] overflow-hidden rounded-[1.65rem] border border-slate-200 bg-slate-950 shadow-[0_18px_42px_rgba(15,23,42,0.12)]">
+      <div
+        className="relative mx-auto w-full max-w-xl overflow-hidden rounded-[1.65rem] border border-slate-200 bg-slate-950 shadow-[0_18px_42px_rgba(15,23,42,0.12)]"
+        style={{ aspectRatio: activeAspectRatio }}
+      >
         <Cropper
-          aspect={aspectRatio}
+          aspect={activeAspectRatio}
           crop={crop}
           image={imageSrc}
           maxZoom={3}
           minZoom={1}
           onCropChange={setCrop}
           onCropComplete={handleCropComplete}
-          onRotationChange={setRotation}
+          onMediaLoaded={handleMediaLoaded}
           onZoomChange={setZoom}
-          rotation={rotation}
           showGrid={false}
           zoom={zoom}
           zoomWithScroll
@@ -85,7 +93,7 @@ export function ImageAdjuster({ aspectRatio = 3 / 2, imageSrc, onConfirm, onReta
         <div className="pointer-events-none absolute inset-3 rounded-[1.25rem] border border-white/75 shadow-[inset_0_0_0_1px_rgba(37,99,235,0.25)]" />
       </div>
 
-      <div className="grid gap-4 rounded-[1.4rem] border border-slate-200/80 bg-slate-50/80 p-4 sm:grid-cols-2">
+      <div className="rounded-[1.4rem] border border-slate-200/80 bg-slate-50/80 p-4">
         <label className="grid gap-2 text-sm font-bold text-slate-700">
           <span>Perbesar</span>
           <input
@@ -97,19 +105,6 @@ export function ImageAdjuster({ aspectRatio = 3 / 2, imageSrc, onConfirm, onReta
             step="0.01"
             type="range"
             value={zoom}
-          />
-        </label>
-        <label className="grid gap-2 text-sm font-bold text-slate-700">
-          <span>Putar</span>
-          <input
-            aria-label="Putar foto"
-            className="h-2 w-full cursor-pointer accent-clinical-600"
-            max="15"
-            min="-15"
-            onChange={(event) => setRotation(Number(event.target.value))}
-            step="1"
-            type="range"
-            value={rotation}
           />
         </label>
       </div>

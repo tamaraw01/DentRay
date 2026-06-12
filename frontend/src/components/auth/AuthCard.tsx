@@ -6,10 +6,10 @@ import { FormEvent, useState } from "react";
 
 import { sendPasswordReset, signInWithEmail, signUpWithEmail } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
+import { MascotCard } from "@/components/mascot/MascotCard";
 import { BrandLogo } from "@/components/shared/BrandLogo";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { ToothModel } from "@/components/visuals/ToothModel";
 
 type AuthMode = "login" | "signup" | "forgot";
 
@@ -97,7 +97,7 @@ export function AuthCard({ mode }: AuthCardProps) {
             <h1 className="mt-3 text-3xl font-bold tracking-[-0.04em] text-slate-950">{active.title}</h1>
             <p className="mt-3 text-sm leading-6 text-slate-600">{active.subtitle}</p>
           </div>
-          <ToothModel className="mt-2 min-h-[190px]" scale={1.8} variant="background" />
+          <MascotCard className="mt-5 min-h-[180px]" variant="compact" />
         </div>
       </div>
 

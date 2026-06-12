@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useDentRayUser } from "@/components/app/AppShell";
+import { DentRayMascot } from "@/components/mascot/DentRayMascot";
 import { listScanSessions } from "@/lib/scan-storage";
 import type { ScanSessionSummary } from "@/types/scan";
 import { Card } from "@/components/ui/Card";
@@ -30,8 +31,14 @@ export function HistoryList() {
       </div>
       {error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       {sessions.length === 0 ? (
-        <Card>
-          <p className="text-sm leading-6 text-slate-600">Belum ada hasil tersimpan.</p>
+        <Card className="flex items-center gap-5">
+          <div className="flex h-28 w-24 shrink-0 items-center justify-center rounded-[1.5rem] bg-clinical-50">
+            <DentRayMascot size="sm" />
+          </div>
+          <div>
+            <h2 className="text-lg font-bold text-slate-950">Belum ada hasil tersimpan.</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Mulai scan untuk menyimpan riwayat pertama.</p>
+          </div>
         </Card>
       ) : (
         sessions.map((session) => (
@@ -39,7 +46,7 @@ export function HistoryList() {
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
               {new Date(session.created_at).toLocaleString("id-ID")}
             </p>
-            <h2 className="mt-2 text-xl font-bold text-slate-950">{session.highest_indication}</h2>
+            <h2 className="mt-2 text-xl font-bold text-slate-950">Hasil skrining</h2>
             <p className="mt-2 text-sm leading-6 text-slate-600">{session.total_images} citra dianalisis.</p>
             <Link className="mt-4 inline-block rounded-[1rem] bg-clinical-50 px-4 py-2 text-sm font-bold text-clinical-700" href={`/app/history/${session.id}`}>
               Lihat detail

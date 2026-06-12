@@ -104,6 +104,23 @@ git add .gitattributes hf-dentray-backend/models/dentray_unet_model.keras
 
 Konfigurasi tracking sudah tersedia di `.gitattributes`.
 
+## Mascot Frontend
+
+Mascot final DentRay disimpan di:
+
+```text
+frontend/public/mascot/dentray-mascot.png
+```
+
+Frontend menampilkan mascot melalui `next/image` dengan dimensi stabil dan ukuran
+responsif. Welcome dan dashboard memuat gambar lebih awal, sedangkan penggunaan lain
+tetap mengikuti lazy loading bawaan Next.js. Animasi mascot hanya memakai transform
+CSS ringan dan berhenti saat pengguna mengaktifkan reduced motion.
+
+Sebelum dikirim ke backend, citra diperkecil secara proporsional dengan sisi terpanjang
+maksimal `512px` dan kualitas JPEG `0.9`. Backend tetap menangani preprocessing model
+sesuai ukuran input model.
+
 ## Setup Supabase
 
 1. Buat project Supabase.

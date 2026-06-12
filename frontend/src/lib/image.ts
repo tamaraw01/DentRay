@@ -28,7 +28,7 @@ function canvasToBlob(canvas: HTMLCanvasElement) {
         reject(new Error("Hasil penyesuaian tidak dapat dibuat."));
       },
       "image/jpeg",
-      0.92
+      0.9
     );
   });
 }
@@ -66,8 +66,14 @@ export async function createCroppedImage(imageSrc: string, crop: Area, rotation:
     throw new Error("Browser tidak dapat membuat hasil crop.");
   }
 
-  outputCanvas.width = cropWidth;
-  outputCanvas.height = cropHeight;
+  const outputScale = Math.min(1, 512 / Math.max(cropWidth, cropHeight));
+  const outputWidth = Math.max(1, Math.round(cropWidth * outputScale));
+  const outputHeight = Math.max(1, Math.round(cropHeight * outputScale));
+
+  outputCanvas.width = outputWidth;
+  outputCanvas.height = outputHeight;
+  outputContext.imageSmoothingEnabled = true;
+  outputContext.imageSmoothingQuality = "high";
   outputContext.drawImage(
     sourceCanvas,
     cropX,
@@ -76,8 +82,8 @@ export async function createCroppedImage(imageSrc: string, crop: Area, rotation:
     cropHeight,
     0,
     0,
-    cropWidth,
-    cropHeight
+    outputWidth,
+    outputHeight
   );
 
   const blob = await canvasToBlob(outputCanvas);

@@ -1,0 +1,89 @@
+"use client";
+
+import Link from "next/link";
+
+import { cn } from "@/lib/utils";
+
+export const appNavItems = [
+  { href: "/app", icon: "home", label: "Beranda", mobileLabel: "Beranda" },
+  { href: "/app/scan", icon: "scan", label: "Skrining", mobileLabel: "Scan" },
+  { href: "/app/history", icon: "history", label: "Riwayat", mobileLabel: "Riwayat" },
+  { href: "/app/profile", icon: "profile", label: "Profil", mobileLabel: "Profil" }
+] as const;
+
+export function AppNavIcon({ name }: { name: (typeof appNavItems)[number]["icon"] }) {
+  const iconClassName = "h-[1.1rem] w-[1.1rem] shrink-0";
+
+  if (name === "scan") {
+    return (
+      <svg aria-hidden="true" className={iconClassName} fill="none" viewBox="0 0 24 24">
+        <path d="M5 8V5h3M16 5h3v3M19 16v3h-3M8 19H5v-3" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+        <path d="M7 12h10" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+      </svg>
+    );
+  }
+
+  if (name === "history") {
+    return (
+      <svg aria-hidden="true" className={iconClassName} fill="none" viewBox="0 0 24 24">
+        <path d="M12 7v5l3 2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+        <path d="M5 12a7 7 0 1 0 2-5" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+        <path d="M5 5v4h4" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+      </svg>
+    );
+  }
+
+  if (name === "profile") {
+    return (
+      <svg aria-hidden="true" className={iconClassName} fill="none" viewBox="0 0 24 24">
+        <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" strokeWidth="2" />
+        <path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg aria-hidden="true" className={iconClassName} fill="none" viewBox="0 0 24 24">
+      <path d="m4 11 8-7 8 7" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+      <path d="M6 10v10h12V10" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+    </svg>
+  );
+}
+
+type BottomNavigationProps = {
+  pathname: string;
+};
+
+export function BottomNavigation({ pathname }: BottomNavigationProps) {
+  return (
+    <nav
+      aria-label="Navigasi aplikasi"
+      className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 mx-auto grid max-w-[430px] grid-cols-4 gap-1 rounded-[1.65rem] border border-slate-200/90 bg-white p-1.5 text-slate-500 shadow-[0_14px_36px_rgba(15,23,42,0.11)] lg:hidden"
+    >
+      {appNavItems.map((item) => {
+        const isActive = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href);
+
+        return (
+          <Link
+            aria-current={isActive ? "page" : undefined}
+            aria-label={item.label}
+            className={cn(
+              "flex h-12 min-w-0 items-center justify-center rounded-[1.25rem] px-1 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500 focus-visible:ring-offset-1",
+              isActive
+                ? "bg-clinical-600 text-white shadow-[0_9px_22px_rgba(37,99,235,0.2)]"
+                : "text-slate-500 hover:bg-slate-50 hover:text-clinical-700"
+            )}
+            href={item.href}
+            key={item.href}
+          >
+            <span className="flex min-w-0 items-center justify-center gap-1.5">
+              <AppNavIcon name={item.icon} />
+              {isActive && <span className="truncate text-[0.68rem] leading-none min-[390px]:text-xs">{item.mobileLabel}</span>}
+              {!isActive && <span className="sr-only">{item.label}</span>}
+            </span>
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
