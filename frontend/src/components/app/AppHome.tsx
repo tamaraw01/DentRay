@@ -10,6 +10,12 @@ import type { ScanSessionSummary } from "@/types/scan";
 import { Card } from "@/components/ui/Card";
 import { LinkButton } from "@/components/ui/Button";
 
+const informationLinks = [
+  { href: "/how-it-works", label: "Cara kerja" },
+  { href: "/about", label: "Tentang" },
+  { href: "/disclaimer", label: "Catatan" }
+] as const;
+
 export function AppHome() {
   const user = useDentRayUser();
   const [latest, setLatest] = useState<ScanSessionSummary | null>(null);
@@ -37,6 +43,17 @@ export function AppHome() {
             <MascotCard animated className="min-h-[250px]" priority variant="card" />
           </div>
         </section>
+
+        <nav aria-label="Informasi DentRay" className="rounded-[1.5rem] border border-slate-200/80 bg-white px-4 py-4 md:hidden">
+          <p className="text-xs font-bold uppercase tracking-[0.12em] text-slate-500">Informasi DentRay</p>
+          <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+            {informationLinks.map((item) => (
+              <Link className="text-sm font-bold text-clinical-700" href={item.href} key={item.href}>
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </nav>
       </div>
 
       <aside className="space-y-4">

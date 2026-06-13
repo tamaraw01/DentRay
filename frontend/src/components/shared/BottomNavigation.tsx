@@ -58,7 +58,7 @@ export function BottomNavigation({ pathname }: BottomNavigationProps) {
   return (
     <nav
       aria-label="Navigasi aplikasi"
-      className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 mx-auto grid max-w-[430px] grid-cols-4 gap-1 rounded-[1.65rem] border border-slate-200/90 bg-white p-1.5 text-slate-500 shadow-[0_14px_36px_rgba(15,23,42,0.11)] lg:hidden"
+      className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 mx-auto grid max-w-[430px] grid-cols-4 gap-1 overflow-hidden rounded-[1.65rem] border border-slate-200/90 bg-white p-1.5 text-slate-500 shadow-[0_14px_36px_rgba(15,23,42,0.11)] md:hidden"
     >
       {appNavItems.map((item) => {
         const isActive = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href);

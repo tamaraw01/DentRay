@@ -15,6 +15,13 @@ type CameraCaptureProps = {
 type CameraState = "idle" | "starting" | "ready" | "error";
 type FacingMode = "user" | "environment";
 
+const CAPTURE_WIDTH = 900;
+const CAPTURE_HEIGHT = 600;
+
+function clamp(value: number, minimum: number, maximum: number) {
+  return Math.min(Math.max(value, minimum), maximum);
+}
+
 function cameraErrorMessage(error: unknown) {
   if (error instanceof DOMException) {
     if (error.name === "NotAllowedError") {
@@ -39,6 +46,8 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
   const { isPortrait } = useDeviceOrientation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const previewContainerRef = useRef<HTMLDivElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const facingModeRef = useRef<FacingMode>("user");
   const [state, setState] = useState<CameraState>("idle");
@@ -134,14 +143,73 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
   const capturePhoto = () => {
     const video = videoRef.current;
     const canvas = canvasRef.current;
+    const frame = frameRef.current;
+    const previewContainer = previewContainerRef.current;
 
-    if (!video || !canvas || video.videoWidth === 0 || video.videoHeight === 0) {
+    if (
+      !video ||
+      !canvas ||
+      !frame ||
+      !previewContainer ||
+      video.videoWidth === 0 ||
+      video.videoHeight === 0
+    ) {
       setError("Preview kamera belum siap. Tunggu sebentar lalu coba lagi.");
       return;
     }
 
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    const previewRect = previewContainer.getBoundingClientRect();
+    const frameRect = frame.getBoundingClientRect();
+    const frameLeft = Math.max(frameRect.left, previewRect.left);
+    const frameTop = Math.max(frameRect.top, previewRect.top);
+    const frameRight = Math.min(frameRect.right, previewRect.right);
+    const frameBottom = Math.min(frameRect.bottom, previewRect.bottom);
+    const frameWidth = frameRight - frameLeft;
+    const frameHeight = frameBottom - frameTop;
+
+    if (previewRect.width <= 0 || previewRect.height <= 0 || frameWidth <= 0 || frameHeight <= 0) {
+      setError("Area frame belum siap. Coba ambil foto kembali.");
+      return;
+    }
+
+    const videoAspect = video.videoWidth / video.videoHeight;
+    const previewAspect = previewRect.width / previewRect.height;
+    let displayedWidth = previewRect.width;
+    let displayedHeight = previewRect.height;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (videoAspect > previewAspect) {
+      displayedWidth = previewRect.height * videoAspect;
+      offsetX = (previewRect.width - displayedWidth) / 2;
+    } else {
+      displayedHeight = previewRect.width / videoAspect;
+      offsetY = (previewRect.height - displayedHeight) / 2;
+    }
+
+    const frameXInDisplayedVideo = frameLeft - previewRect.left - offsetX;
+    const frameYInDisplayedVideo = frameTop - previewRect.top - offsetY;
+    const sourceScaleX = video.videoWidth / displayedWidth;
+    const sourceScaleY = video.videoHeight / displayedHeight;
+    const sourceWidth = Math.min(video.videoWidth, frameWidth * sourceScaleX);
+    const sourceHeight = Math.min(video.videoHeight, frameHeight * sourceScaleY);
+    const visibleSourceX = frameXInDisplayedVideo * sourceScaleX;
+    const sourceY = clamp(
+      frameYInDisplayedVideo * sourceScaleY,
+      0,
+      Math.max(0, video.videoHeight - sourceHeight)
+    );
+    const sourceX =
+      facingModeRef.current === "user"
+        ? clamp(
+            video.videoWidth - visibleSourceX - sourceWidth,
+            0,
+            Math.max(0, video.videoWidth - sourceWidth)
+          )
+        : clamp(visibleSourceX, 0, Math.max(0, video.videoWidth - sourceWidth));
+
+    canvas.width = CAPTURE_WIDTH;
+    canvas.height = CAPTURE_HEIGHT;
     const context = canvas.getContext("2d");
     if (!context) {
       setError("Browser tidak dapat memproses gambar kamera.");
@@ -153,7 +221,17 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
       context.translate(canvas.width, 0);
       context.scale(-1, 1);
     }
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    context.drawImage(
+      video,
+      sourceX,
+      sourceY,
+      sourceWidth,
+      sourceHeight,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
     context.restore();
     canvas.toBlob(
       (blob) => {
@@ -191,6 +269,7 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
             "relative w-full",
             isPortrait ? "aspect-[3/4]" : "aspect-[16/9] max-h-[72svh]"
           )}
+          ref={previewContainerRef}
         >
           <video
             aria-label="Live camera preview"
@@ -216,6 +295,7 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
                 "aspect-[3/2] rounded-[2rem] border-2 border-white/85 shadow-[0_0_0_999px_rgba(15,23,42,0.13),0_2px_12px_rgba(15,23,42,0.16)]",
                 isPortrait ? "w-[84%]" : "w-[68%] max-w-[72svh]"
               )}
+              ref={frameRef}
             />
           </div>
           {state === "starting" && (
