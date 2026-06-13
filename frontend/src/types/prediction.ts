@@ -1,18 +1,22 @@
 export type ScreeningStatus = "idle" | "ready" | "analyzing" | "result" | "error";
 
-export type PredictionResponse = {
-  success: true;
-  original_preview: string;
-  predicted_mask: string;
-  overlay: string;
-  segmented_area_pixels: number;
-  segmented_area_percentage: number;
-  interpretation_level: string;
-  interpretation_text: string;
-  recommendations: string[];
-  disclaimer: string;
-  warnings: string[];
+export type ModelInputSize = {
+  width: number;
+  height: number;
 };
+
+export type DentRayResult = {
+  success: boolean;
+  overlay: string;
+  disclaimer?: string;
+  warnings?: string[];
+  segmented_area_percentage?: number;
+  image_width?: number;
+  image_height?: number;
+  model_input_size?: ModelInputSize;
+};
+
+export type PredictionResponse = DentRayResult;
 
 export type SelectedImage = {
   file: File;

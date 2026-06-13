@@ -19,6 +19,10 @@ function downloadDataUrl(dataUrl: string, filename: string) {
 }
 
 export function ResultDashboard({ result, onReset }: ResultDashboardProps) {
+  const disclaimer =
+    result.disclaimer ??
+    "Hasil ini adalah skrining awal dan bukan pengganti pemeriksaan dokter.";
+
   return (
     <section className="space-y-5">
       <div>
@@ -27,7 +31,7 @@ export function ResultDashboard({ result, onReset }: ResultDashboardProps) {
       </div>
       <ResultImageGrid result={result} />
       <div className="rounded-[1.4rem] border border-amber-200/70 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-950">
-        Hasil ini adalah skrining awal dan bukan pengganti pemeriksaan dokter.
+        {disclaimer}
       </div>
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button onClick={onReset} type="button" variant="secondary">

@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import { parseDentRayPayload } from "@/lib/dentray-api";
 import { checkHuggingFaceBackend, predictWithHuggingFace } from "@/lib/huggingface-api";
 import type { PredictionResponse } from "@/types/prediction";
 
@@ -51,5 +52,5 @@ export async function predictImage(file: File): Promise<PredictionResponse> {
     throw new Error(getErrorMessage(payload, "Analisis DentRay gagal. Coba ulangi dengan gambar yang lebih jelas."));
   }
 
-  return payload as PredictionResponse;
+  return parseDentRayPayload(payload);
 }

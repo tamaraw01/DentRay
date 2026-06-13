@@ -6,7 +6,7 @@ import type { ScanSessionSummary, StoredScanResult } from "@/types/scan";
 type CreateScanSessionInput = {
   userId: string;
   totalImages: number;
-  highestIndication: string;
+  highestIndication?: string | null;
   summary: string;
 };
 
@@ -18,9 +18,9 @@ type CreateScanResultInput = {
   maskImageUrl?: string | null;
   overlayImageUrl?: string | null;
   segmentedAreaPixels?: number | null;
-  segmentedAreaPercentage: number;
-  interpretationLevel: string;
-  interpretationText: string;
+  segmentedAreaPercentage?: number | null;
+  interpretationLevel?: string | null;
+  interpretationText?: string | null;
 };
 
 function ensureSupabase() {
@@ -56,7 +56,7 @@ export async function createScanSession(input: CreateScanSessionInput): Promise<
   const { data, error } = await supabase
     .from("scan_sessions")
     .insert({
-      highest_indication: input.highestIndication,
+      highest_indication: input.highestIndication ?? null,
       summary: input.summary,
       total_images: input.totalImages,
       user_id: input.userId
@@ -74,13 +74,13 @@ export async function createScanSession(input: CreateScanSessionInput): Promise<
 export async function createScanResult(input: CreateScanResultInput | CreateScanResultInput[]) {
   const supabase = ensureSupabase();
   const rows = (Array.isArray(input) ? input : [input]).map((item) => ({
-    interpretation_level: item.interpretationLevel,
-    interpretation_text: item.interpretationText,
-    mask_image_url: item.maskImageUrl,
-    original_image_url: item.originalImageUrl,
-    overlay_image_url: item.overlayImageUrl,
-    segmented_area_pixels: item.segmentedAreaPixels,
-    segmented_area_percentage: item.segmentedAreaPercentage,
+    interpretation_level: item.interpretationLevel ?? null,
+    interpretation_text: item.interpretationText ?? null,
+    mask_image_url: item.maskImageUrl ?? null,
+    original_image_url: item.originalImageUrl ?? null,
+    overlay_image_url: item.overlayImageUrl ?? null,
+    segmented_area_pixels: item.segmentedAreaPixels ?? null,
+    segmented_area_percentage: item.segmentedAreaPercentage ?? null,
     session_id: item.sessionId,
     user_id: item.userId,
     view_type: item.viewType

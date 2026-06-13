@@ -10,18 +10,15 @@ from PIL import Image
 
 IMAGE_SIZE = (256, 256)
 MASK_THRESHOLD = 0.5
-OVERLAY_ALPHA = 0.45
-MODEL_PATH = Path(__file__).resolve().parent / "dentray_unet_model.keras"
+OVERLAY_COLOR = (239, 68, 68)
+OVERLAY_ALPHA = 0.42
+MODEL_PATH = (
+    Path(__file__).resolve().parent / "models" / "dentray_unet_model.keras"
+)
 
 DISCLAIMER = (
-    "DentRay adalah alat bantu skrining awal berbasis AI dan bukan pengganti "
-    "pemeriksaan dokter gigi."
+    "Hasil ini adalah skrining awal dan bukan pengganti pemeriksaan dokter gigi."
 )
-RECOMMENDATIONS = [
-    "Gunakan hasil ini sebagai skrining awal.",
-    "Ambil ulang citra jika gambar kurang jelas.",
-    "Periksa ke dokter gigi untuk memastikan kondisi gigi.",
-]
 
 
 @lru_cache(maxsize=1)
@@ -29,7 +26,7 @@ def load_dentray_model() -> Any:
     if not MODEL_PATH.exists() or not MODEL_PATH.is_file() or MODEL_PATH.stat().st_size == 0:
         raise FileNotFoundError(
             "Model DentRay belum ditemukan. Letakkan dentray_unet_model.keras "
-            "di root Space sebagai dentray_unet_model.keras."
+            "di models/dentray_unet_model.keras."
         )
 
     from tensorflow.keras.models import load_model
@@ -62,7 +59,7 @@ def create_red_overlay(original_rgb: Image.Image, binary_mask: np.ndarray) -> Im
     mask = binary_mask_image(binary_mask).resize(original_rgb.size)
     base = np.asarray(original_rgb, dtype=np.float32)
     red_layer = np.zeros_like(base)
-    red_layer[..., 0] = 255
+    red_layer[...] = OVERLAY_COLOR
 
     mask_alpha = (np.asarray(mask, dtype=np.float32) / 255.0)[..., None]
     blended = base * (1 - mask_alpha * OVERLAY_ALPHA) + red_layer * (
@@ -78,63 +75,31 @@ def image_to_data_url(image: Image.Image) -> str:
     return f"data:image/png;base64,{encoded}"
 
 
-def interpretation_for(percentage: float) -> tuple[str, str]:
-    if percentage == 0:
-        level = "No visible indication detected"
-        text = (
-            "DentRay tidak menemukan area yang tersegmentasi sebagai indikasi visual. "
-            "Hasil ini hanya skrining awal dan perlu dikonfirmasi oleh dokter gigi."
-        )
-    elif percentage < 2:
-        level = "Low visual indication"
-        text = (
-            "DentRay menemukan area kecil yang tersegmentasi sebagai indikasi visual. "
-            "Hasil ini hanya skrining awal dan perlu dikonfirmasi oleh dokter gigi."
-        )
-    elif percentage <= 8:
-        level = "Moderate visual indication"
-        text = (
-            "DentRay menemukan area sedang yang tersegmentasi sebagai indikasi visual. "
-            "Hasil ini hanya skrining awal dan perlu dikonfirmasi oleh dokter gigi."
-        )
-    else:
-        level = "High visual indication"
-        text = (
-            "DentRay menemukan area cukup besar yang tersegmentasi sebagai indikasi visual. "
-            "Hasil ini hanya skrining awal dan perlu dikonfirmasi oleh dokter gigi."
-        )
-
-    return level, text
-
-
 def analyze_image(image: Image.Image) -> dict[str, Any]:
     original_rgb, batch = preprocess_image(image)
     model = load_dentray_model()
     probability_mask = model.predict(batch, verbose=0)
     binary_mask = probability_to_binary_mask(probability_mask)
 
-    mask_image = binary_mask_image(binary_mask)
     overlay_image = create_red_overlay(original_rgb, binary_mask)
     segmented_pixels = int(np.count_nonzero(binary_mask))
     segmented_percentage = round(
         segmented_pixels / (IMAGE_SIZE[0] * IMAGE_SIZE[1]) * 100,
         2,
     )
-    level, interpretation_text = interpretation_for(segmented_percentage)
+    image_width, image_height = original_rgb.size
 
     return {
         "success": True,
-        "original_image": original_rgb,
-        "mask_image": mask_image,
         "overlay_image": overlay_image,
-        "original_preview": image_to_data_url(original_rgb),
-        "predicted_mask": image_to_data_url(mask_image),
         "overlay": image_to_data_url(overlay_image),
-        "segmented_area_pixels": segmented_pixels,
+        "image_width": image_width,
+        "image_height": image_height,
+        "model_input_size": {
+            "width": IMAGE_SIZE[0],
+            "height": IMAGE_SIZE[1],
+        },
         "segmented_area_percentage": segmented_percentage,
-        "interpretation_level": level,
-        "interpretation_text": interpretation_text,
-        "recommendations": RECOMMENDATIONS,
         "disclaimer": DISCLAIMER,
         "warnings": [],
     }
@@ -152,13 +117,10 @@ def predict(image: Image.Image | None):
         raise gr.Error("Analisis belum dapat dijalankan. Coba lagi.") from exc
 
     api_response = {
-        key: value
-        for key, value in result.items()
-        if key not in {"original_image", "mask_image", "overlay_image"}
+        key: value for key, value in result.items() if key != "overlay_image"
     }
 
     return (
-        result["mask_image"],
         result["overlay_image"],
         api_response,
     )
@@ -177,11 +139,11 @@ SPACE_CSS = """
 }
 """
 
-with gr.Blocks(title="DentRay AI Screening") as demo:
+with gr.Blocks(title="DentRay AI Backend") as demo:
     gr.Markdown(
         """
-        # DentRay AI Screening
-        Unggah citra gigi untuk melihat mask dan overlay area tersegmentasi.
+        # DentRay AI Backend
+        Unggah citra gigi untuk melihat overlay area tersegmentasi.
 
         <div class="dentray-note">
         Hasil hanya untuk skrining awal dan bukan pengganti pemeriksaan dokter gigi.
@@ -197,9 +159,7 @@ with gr.Blocks(title="DentRay AI Screening") as demo:
     )
     analyze_button = gr.Button("Analisis", variant="primary")
 
-    with gr.Row():
-        mask_output = gr.Image(label="Mask", type="pil")
-        overlay_output = gr.Image(label="Overlay", type="pil")
+    overlay_output = gr.Image(label="Overlay", type="pil")
 
     json_output = gr.JSON(label="Response JSON", visible=False)
 
@@ -207,14 +167,13 @@ with gr.Blocks(title="DentRay AI Screening") as demo:
         fn=predict,
         inputs=[image_input],
         outputs=[
-            mask_output,
             overlay_output,
             json_output,
         ],
         api_name="predict",
         api_description=(
-            "Menjalankan segmentasi DentRay dan mengembalikan preview, mask, overlay, "
-            "metric, interpretasi aman, serta response JSON untuk frontend."
+            "Menjalankan segmentasi DentRay dan mengembalikan overlay serta response "
+            "JSON untuk frontend."
         ),
         concurrency_limit=1,
     )

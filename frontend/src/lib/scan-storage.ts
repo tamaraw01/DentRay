@@ -8,15 +8,6 @@ import type { DentRayUser } from "@/types/user";
 const localSessionsKey = "dentray.scan_sessions";
 const localResultsKey = "dentray.scan_results";
 
-function getHighestIndication(results: ScanResultItem[]) {
-  const order = ["No visible indication detected", "Low visual indication", "Moderate visual indication", "High visual indication"];
-  return results.reduce((highest, item) => {
-    const currentIndex = order.indexOf(item.result.interpretation_level);
-    const highestIndex = order.indexOf(highest);
-    return currentIndex > highestIndex ? item.result.interpretation_level : highest;
-  }, "No visible indication detected");
-}
-
 function readLocal<T>(key: string): T[] {
   if (typeof window === "undefined") {
     return [];
@@ -37,25 +28,24 @@ function writeLocal<T>(key: string, value: T[]) {
 }
 
 export async function saveScanSession(user: DentRayUser | null, results: ScanResultItem[]) {
-  const highestIndication = getHighestIndication(results);
-  const summary = `${results.length} citra. ${highestIndication}.`;
+  const summary = `${results.length} citra. Overlay tersimpan.`;
 
   if (isSupabaseConfigured() && user) {
     const session = await createScanSession({
-      highestIndication,
+      highestIndication: null,
       summary,
       totalImages: results.length,
       userId: user.id
     });
 
     await createScanResult(results.map((item) => ({
-      interpretationLevel: item.result.interpretation_level,
-      interpretationText: item.result.interpretation_text,
-      maskImageUrl: item.result.predicted_mask,
-      originalImageUrl: item.result.original_preview,
+      interpretationLevel: null,
+      interpretationText: null,
+      maskImageUrl: null,
+      originalImageUrl: null,
       overlayImageUrl: item.result.overlay,
-      segmentedAreaPixels: item.result.segmented_area_pixels,
-      segmentedAreaPercentage: item.result.segmented_area_percentage,
+      segmentedAreaPixels: null,
+      segmentedAreaPercentage: item.result.segmented_area_percentage ?? null,
       sessionId: session.id,
       userId: user.id,
       viewType: item.title
@@ -70,20 +60,20 @@ export async function saveScanSession(user: DentRayUser | null, results: ScanRes
     user_id: user?.id ?? "",
     created_at: new Date().toISOString(),
     total_images: results.length,
-    highest_indication: highestIndication,
+    highest_indication: null,
     summary
   };
   const storedResults: StoredScanResult[] = results.map((item, index) => ({
     id: `${id}-${index}`,
     session_id: id,
     view_type: item.title,
-    original_image_url: item.result.original_preview,
-  mask_image_url: item.result.predicted_mask,
-  overlay_image_url: item.result.overlay,
-  segmented_area_pixels: item.result.segmented_area_pixels,
-  segmented_area_percentage: item.result.segmented_area_percentage,
-    interpretation_level: item.result.interpretation_level,
-    interpretation_text: item.result.interpretation_text,
+    original_image_url: null,
+    mask_image_url: null,
+    overlay_image_url: item.result.overlay,
+    segmented_area_pixels: null,
+    segmented_area_percentage: item.result.segmented_area_percentage ?? null,
+    interpretation_level: null,
+    interpretation_text: null,
     created_at: session.created_at
   }));
 

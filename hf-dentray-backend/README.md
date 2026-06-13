@@ -78,19 +78,23 @@ import { Client, handle_file } from "@gradio/client";
 
 const client = await Client.connect("https://username-space-name.hf.space");
 const result = await client.predict("/predict", [handle_file(file)]);
+const overlayOutput = result.data[0];
 const responseJson = result.data[result.data.length - 1];
 ```
 
-Response JSON kompatibel dengan dashboard frontend DentRay:
+Output Gradio:
 
-- `original_preview`
-- `predicted_mask`
+- `result.data[0]`: overlay image
+- `result.data[1]`: response JSON
+
+Response JSON untuk frontend DentRay:
+
+- `success`
 - `overlay`
-- `segmented_area_pixels`
+- `image_width`
+- `image_height`
+- `model_input_size`
 - `segmented_area_percentage`
-- `interpretation_level`
-- `interpretation_text`
-- `recommendations`
 - `disclaimer`
 - `warnings`
 
