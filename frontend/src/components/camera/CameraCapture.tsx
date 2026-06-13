@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { useDeviceOrientation } from "@/hooks/useDeviceOrientation";
+import { cn } from "@/lib/utils";
 
 type CameraCaptureProps = {
   disabled?: boolean;
@@ -34,6 +36,7 @@ function cameraErrorMessage(error: unknown) {
 }
 
 export function CameraCapture({ disabled = false, onPhotoSelected, onUploadRequested }: CameraCaptureProps) {
+  const { isPortrait } = useDeviceOrientation();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -183,7 +186,12 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
         <p className="mt-1 text-sm text-slate-600">Posisikan gigi di dalam frame.</p>
       </div>
       <div className="overflow-hidden rounded-[1.65rem] border border-slate-200 bg-slate-100 shadow-[0_14px_34px_rgba(15,23,42,0.05)]">
-        <div className="relative aspect-[3/4] sm:aspect-[4/3]">
+        <div
+          className={cn(
+            "relative w-full",
+            isPortrait ? "aspect-[3/4]" : "aspect-[16/9] max-h-[72svh]"
+          )}
+        >
           <video
             aria-label="Live camera preview"
             className={`h-full w-full object-cover ${facingMode === "user" ? "scale-x-[-1]" : ""}`}
@@ -203,7 +211,12 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
             </button>
           )}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <div className="h-[58%] w-[82%] rounded-[1.5rem] border border-white/90 shadow-[0_0_0_999px_rgba(15,23,42,0.13)] sm:h-[62%] sm:w-[76%]" />
+            <div
+              className={cn(
+                "aspect-[3/2] rounded-[2rem] border-2 border-white/85 shadow-[0_0_0_999px_rgba(15,23,42,0.13),0_2px_12px_rgba(15,23,42,0.16)]",
+                isPortrait ? "w-[84%]" : "w-[68%] max-w-[72svh]"
+              )}
+            />
           </div>
           {state === "starting" && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/90 text-sm font-semibold text-slate-700">
