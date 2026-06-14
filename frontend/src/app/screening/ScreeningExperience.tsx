@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 
 import { CameraCapture } from "@/components/camera/CameraCapture";
 import { ImageAdjuster } from "@/components/camera/ImageAdjuster";
+import { ImageQualityNotice } from "@/components/camera/ImageQualityNotice";
 import { DentRayLoading } from "@/components/loading/DentRayLoading";
 import { ResultDashboard } from "@/components/result/ResultDashboard";
 import { BrandLogo } from "@/components/shared/BrandLogo";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { ImageUpload } from "@/components/upload/ImageUpload";
+import { useImageQuality } from "@/hooks/useImageQuality";
 import { predictImage } from "@/lib/api";
-import { prepareImageForInference } from "@/lib/image/prepareImageForInference";
+import { enhanceImageForInference } from "@/lib/image/enhanceImageForInference";
 import type { PredictionResponse, ScreeningStatus, SelectedImage } from "@/types/prediction";
 
 type InputMode = "camera" | "upload";
@@ -32,6 +34,10 @@ export function ScreeningExperience() {
   const [status, setStatus] = useState<ScreeningStatus>("idle");
   const [result, setResult] = useState<PredictionResponse | null>(null);
   const [error, setError] = useState("");
+  const { isCheckingQuality, quality, qualityError } = useImageQuality(
+    selectedImage?.file ?? null
+  );
+  const isQualityBlocked = quality?.ok === false;
 
   useEffect(() => {
     return () => {
@@ -95,7 +101,12 @@ export function ScreeningExperience() {
   };
 
   const analyze = async () => {
-    if (!selectedImage || status === "analyzing") {
+    if (
+      !selectedImage ||
+      status === "analyzing" ||
+      isCheckingQuality ||
+      isQualityBlocked
+    ) {
       return;
     }
 
@@ -103,7 +114,7 @@ export function ScreeningExperience() {
     setError("");
 
     try {
-      const inferenceFile = await prepareImageForInference(selectedImage.file);
+      const inferenceFile = await enhanceImageForInference(selectedImage.file);
       const prediction = await predictImage(inferenceFile);
       setResult(prediction);
       setStatus("result");
@@ -194,9 +205,18 @@ export function ScreeningExperience() {
                     <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Periksa citra</p>
                     <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Citra siap</h2>
                     <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
+                    <ImageQualityNotice
+                      error={qualityError}
+                      isChecking={isCheckingQuality}
+                      quality={quality}
+                    />
                     {error && <p className="mt-4 rounded-2xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
                     <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-                      <Button disabled={isAnalyzing} onClick={analyze} type="button">
+                      <Button
+                        disabled={isAnalyzing || isCheckingQuality || isQualityBlocked}
+                        onClick={analyze}
+                        type="button"
+                      >
                         Analisis
                       </Button>
                       <Button disabled={isAnalyzing} onClick={resetFlow} type="button" variant="secondary">

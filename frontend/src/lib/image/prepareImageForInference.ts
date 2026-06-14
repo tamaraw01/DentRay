@@ -1,5 +1,7 @@
-const INFERENCE_IMAGE_MAX_SIDE = 512;
-const INFERENCE_IMAGE_QUALITY = 0.9;
+export type ImageInput = File | Blob | ImageData;
+
+export const INFERENCE_IMAGE_MAX_SIDE = 1024;
+export const INFERENCE_IMAGE_QUALITY = 0.92;
 
 function loadImage(source: string) {
   return new Promise<HTMLImageElement>((resolve, reject) => {
@@ -10,7 +12,10 @@ function loadImage(source: string) {
   });
 }
 
-function canvasToJpeg(canvas: HTMLCanvasElement) {
+export function canvasToJpeg(
+  canvas: HTMLCanvasElement,
+  quality = INFERENCE_IMAGE_QUALITY
+) {
   return new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
@@ -21,22 +26,53 @@ function canvasToJpeg(canvas: HTMLCanvasElement) {
         reject(new Error("Citra tidak dapat disiapkan untuk analisis."));
       },
       "image/jpeg",
-      INFERENCE_IMAGE_QUALITY
+      quality
     );
   });
 }
 
-export async function prepareImageForInference(fileOrBlob: File | Blob): Promise<File> {
-  const objectUrl = URL.createObjectURL(fileOrBlob);
+function isImageData(input: ImageInput): input is ImageData {
+  return typeof ImageData !== "undefined" && input instanceof ImageData;
+}
+
+export async function createPreparedImageCanvas(
+  input: ImageInput,
+  maxSide = INFERENCE_IMAGE_MAX_SIDE
+) {
+  let objectUrl: string | null = null;
 
   try {
-    const image = await loadImage(objectUrl);
+    let source: CanvasImageSource;
+    let sourceWidth: number;
+    let sourceHeight: number;
+
+    if (isImageData(input)) {
+      const sourceCanvas = document.createElement("canvas");
+      const sourceContext = sourceCanvas.getContext("2d");
+      if (!sourceContext) {
+        throw new Error("Browser tidak dapat menyiapkan citra.");
+      }
+
+      sourceCanvas.width = input.width;
+      sourceCanvas.height = input.height;
+      sourceContext.putImageData(input, 0, 0);
+      source = sourceCanvas;
+      sourceWidth = input.width;
+      sourceHeight = input.height;
+    } else {
+      objectUrl = URL.createObjectURL(input);
+      const image = await loadImage(objectUrl);
+      source = image;
+      sourceWidth = image.naturalWidth;
+      sourceHeight = image.naturalHeight;
+    }
+
     const scale = Math.min(
       1,
-      INFERENCE_IMAGE_MAX_SIDE / Math.max(image.naturalWidth, image.naturalHeight)
+      maxSide / Math.max(sourceWidth, sourceHeight)
     );
-    const targetWidth = Math.max(1, Math.round(image.naturalWidth * scale));
-    const targetHeight = Math.max(1, Math.round(image.naturalHeight * scale));
+    const targetWidth = Math.max(1, Math.round(sourceWidth * scale));
+    const targetHeight = Math.max(1, Math.round(sourceHeight * scale));
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d", { alpha: false });
 
@@ -50,14 +86,25 @@ export async function prepareImageForInference(fileOrBlob: File | Blob): Promise
     context.fillRect(0, 0, targetWidth, targetHeight);
     context.imageSmoothingEnabled = true;
     context.imageSmoothingQuality = "high";
-    context.drawImage(image, 0, 0, targetWidth, targetHeight);
+    context.drawImage(source, 0, 0, targetWidth, targetHeight);
 
-    const blob = await canvasToJpeg(canvas);
-    return new File([blob], "dentray-scan.jpg", {
-      lastModified: Date.now(),
-      type: "image/jpeg"
-    });
+    return {
+      canvas,
+      height: sourceHeight,
+      width: sourceWidth
+    };
   } finally {
-    URL.revokeObjectURL(objectUrl);
+    if (objectUrl) {
+      URL.revokeObjectURL(objectUrl);
+    }
   }
+}
+
+export async function prepareImageForInference(input: ImageInput): Promise<File> {
+  const { canvas } = await createPreparedImageCanvas(input);
+  const blob = await canvasToJpeg(canvas);
+  return new File([blob], "dentray-scan.jpg", {
+    lastModified: Date.now(),
+    type: "image/jpeg"
+  });
 }

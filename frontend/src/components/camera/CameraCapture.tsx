@@ -15,8 +15,8 @@ type CameraCaptureProps = {
 type CameraState = "idle" | "starting" | "ready" | "error";
 type FacingMode = "user" | "environment";
 
-const CAPTURE_WIDTH = 900;
-const CAPTURE_HEIGHT = 600;
+const MAX_CAPTURE_SIDE = 1920;
+const CAPTURE_QUALITY = 0.94;
 
 function clamp(value: number, minimum: number, maximum: number) {
   return Math.min(Math.max(value, minimum), maximum);
@@ -40,6 +40,26 @@ function cameraErrorMessage(error: unknown) {
   }
 
   return "Kamera belum dapat dibuka. Coba ulangi atau gunakan upload gambar.";
+}
+
+function cameraConstraints(mode: FacingMode, highResolution = true): MediaTrackConstraints {
+  if (!highResolution) {
+    return { facingMode: { ideal: mode } };
+  }
+
+  return mode === "environment"
+    ? {
+        facingMode: { ideal: "environment" },
+        frameRate: { ideal: 30 },
+        height: { ideal: 1080 },
+        width: { ideal: 1920 }
+      }
+    : {
+        facingMode: { ideal: "user" },
+        frameRate: { ideal: 30 },
+        height: { ideal: 720 },
+        width: { ideal: 1280 }
+      };
 }
 
 export function CameraCapture({ disabled = false, onPhotoSelected, onUploadRequested }: CameraCaptureProps) {
@@ -75,15 +95,25 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
 
     try {
       stopCamera();
-      const openCamera = (mode: FacingMode) =>
-        navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: { ideal: mode },
-            width: { ideal: 1280 },
-            height: { ideal: 960 }
-          },
-          audio: false
-        });
+      const openCamera = async (mode: FacingMode) => {
+        try {
+          return await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: cameraConstraints(mode)
+          });
+        } catch (constraintError) {
+          if (
+            constraintError instanceof DOMException &&
+            constraintError.name === "OverconstrainedError"
+          ) {
+            return navigator.mediaDevices.getUserMedia({
+              audio: false,
+              video: cameraConstraints(mode, false)
+            });
+          }
+          throw constraintError;
+        }
+      };
 
       let activeMode = requestedMode;
       let stream: MediaStream;
@@ -208,14 +238,20 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
           )
         : clamp(visibleSourceX, 0, Math.max(0, video.videoWidth - sourceWidth));
 
-    canvas.width = CAPTURE_WIDTH;
-    canvas.height = CAPTURE_HEIGHT;
+    const outputScale = Math.min(
+      1,
+      MAX_CAPTURE_SIDE / Math.max(sourceWidth, sourceHeight)
+    );
+    canvas.width = Math.max(1, Math.round(sourceWidth * outputScale));
+    canvas.height = Math.max(1, Math.round(sourceHeight * outputScale));
     const context = canvas.getContext("2d");
     if (!context) {
       setError("Browser tidak dapat memproses gambar kamera.");
       return;
     }
 
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
     context.save();
     if (facingModeRef.current === "user") {
       context.translate(canvas.width, 0);
@@ -245,7 +281,7 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
         onPhotoSelected(file, previewUrl);
       },
       "image/jpeg",
-      0.92
+      CAPTURE_QUALITY
     );
   };
 

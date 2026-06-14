@@ -28,7 +28,7 @@ function canvasToBlob(canvas: HTMLCanvasElement) {
         reject(new Error("Hasil penyesuaian tidak dapat dibuat."));
       },
       "image/jpeg",
-      0.9
+      0.94
     );
   });
 }
@@ -66,7 +66,7 @@ export async function createCroppedImage(imageSrc: string, crop: Area, rotation:
     throw new Error("Browser tidak dapat membuat hasil crop.");
   }
 
-  const outputScale = Math.min(1, 512 / Math.max(cropWidth, cropHeight));
+  const outputScale = Math.min(1, 1600 / Math.max(cropWidth, cropHeight));
   const outputWidth = Math.max(1, Math.round(cropWidth * outputScale));
   const outputHeight = Math.max(1, Math.round(cropHeight * outputScale));
 
