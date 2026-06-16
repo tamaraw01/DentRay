@@ -29,7 +29,7 @@ export function UpdatePrompt() {
         <BrandLogo className="shrink-0" size="sm" />
         <div className="min-w-0 flex-1">
           <h2 className="text-base font-bold text-slate-950">Versi Baru Tersedia</h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600">Perbarui DentRay untuk mendapatkan versi terbaru.</p>
+          <p className="mt-1 text-sm leading-6 text-slate-600">Versi terbaru tersedia.</p>
         </div>
       </div>
 

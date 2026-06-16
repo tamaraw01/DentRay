@@ -69,7 +69,7 @@ export function ImageAdjuster({ aspectRatio, imageSrc, onConfirm, onRetake }: Im
         <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950" id="image-adjuster-title">
           Posisikan Foto
         </h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan area gigi terpusat dan terlihat jelas dalam frame.</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Posisikan gigi di tengah frame.</p>
       </div>
 
       <div

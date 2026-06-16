@@ -5,5 +5,5 @@ export const brandConfig = {
   iconPath: "/brand/dentray-icon-192.png",
   icon192Path: "/brand/dentray-icon-192.png",
   icon512Path: "/brand/dentray-icon-512.png",
-  medicalNote: "Bukan pengganti pemeriksaan dokter gigi profesional."
+  medicalNote: "Bukan pengganti dokter gigi."
 };

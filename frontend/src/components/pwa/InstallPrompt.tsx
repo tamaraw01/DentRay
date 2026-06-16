@@ -31,7 +31,7 @@ export function InstallPrompt() {
   if (isIOSSafari) {
     subtitle = "Ketuk ikon Bagikan di Safari, lalu pilih 'Tambahkan ke Layar Utama'.";
   } else if (canAutoInstall) {
-    subtitle = "Akses DentRay lebih cepat langsung dari layar utama perangkat.";
+    subtitle = "Buka lebih cepat dari layar utama.";
   }
 
   return (

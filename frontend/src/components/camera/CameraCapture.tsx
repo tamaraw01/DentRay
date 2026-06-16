@@ -297,7 +297,7 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
     <div className="space-y-4">
       <div>
         <h2 className="text-xl font-bold tracking-[-0.025em] text-slate-950">Ambil Foto Gigi</h2>
-        <p className="mt-1 text-sm text-slate-600">Posisikan area gigi di dalam frame dengan pencahayaan cukup.</p>
+        <p className="mt-1 text-sm text-slate-600">Posisikan gigi di dalam frame.</p>
       </div>
       <div className="overflow-hidden rounded-[1.65rem] border border-slate-200 bg-slate-100 shadow-[0_14px_34px_rgba(15,23,42,0.05)]">
         <div
@@ -341,7 +341,7 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
           )}
         </div>
       </div>
-      <p className="text-sm text-slate-500">Pastikan ruangan cukup terang untuk hasil terbaik.</p>
+      <p className="text-sm text-slate-500">Gunakan cahaya yang cukup.</p>
 
       {error && <p className="rounded-2xl bg-red-50 p-3 text-sm leading-6 text-red-700">{error}</p>}
 

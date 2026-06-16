@@ -25,8 +25,8 @@ const inputOptions: Array<{
   title: string;
   body: string;
 }> = [
-  { id: "camera", title: "Kamera", body: "Ambil foto langsung dari kamera perangkat." },
-  { id: "upload", title: "Unggah Foto", body: "Pilih dari galeri atau file manager." }
+  { id: "camera", title: "Kamera", body: "Ambil foto langsung." },
+  { id: "upload", title: "Unggah Foto", body: "Pilih dari galeri." }
 ];
 
 export function SingleImageScan() {
@@ -137,7 +137,7 @@ export function SingleImageScan() {
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Skrining Visual</p>
             <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Skrining Gigi</h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">Cukup satu foto gigi yang jelas dan terang.</p>
+            <p className="mt-3 text-sm leading-6 text-slate-600">Satu foto yang jelas sudah cukup.</p>
           </div>
           <span className="rounded-full border border-clinical-100 bg-clinical-50 px-3 py-1 text-xs font-bold text-clinical-700">AI</span>
         </div>
@@ -198,7 +198,7 @@ export function SingleImageScan() {
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Tinjau Foto</p>
                   <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Foto Siap Dianalisis</h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas sebelum memulai analisis.</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
                   <ImageQualityNotice
                     error={qualityError}
                     isChecking={isCheckingQuality}

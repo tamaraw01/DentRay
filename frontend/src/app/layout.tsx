@@ -3,6 +3,7 @@ import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 
 import "./globals.css";
 import { AppChrome } from "@/components/shared/AppChrome";
+import { SplashScreen } from "@/components/shared/SplashScreen";
 import { brandConfig } from "@/config/brand";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -53,7 +54,29 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html className={`${plusJakarta.variable} ${inter.variable}`} lang="id">
       <body>
+        <div aria-hidden="true" className="dentray-splash" id="dentray-splash">
+          <div className="dentray-splash__card-wrapper">
+            <div className="dentray-splash__card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt=""
+                className="dentray-splash__icon"
+                height={88}
+                src="/brand/dentray-icon-512.png"
+                width={88}
+              />
+              <div className="dentray-splash__scan" />
+            </div>
+          </div>
+          <p className="dentray-splash__wordmark">DentRay</p>
+          <div aria-hidden="true" className="dentray-splash__dots">
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
         <AppChrome>{children}</AppChrome>
+        <SplashScreen />
       </body>
     </html>
   );

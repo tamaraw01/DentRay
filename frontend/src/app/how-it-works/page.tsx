@@ -9,15 +9,15 @@ export const metadata = {
 const workflow = [
   {
     title: "Ambil atau Unggah Foto",
-    body: "Gunakan kamera perangkat atau pilih foto dari galeri."
+    body: "Kamera langsung atau pilih dari galeri."
   },
   {
     title: "AI Menganalisis Gambar",
-    body: "Model segmentasi AI memproses dan mendeteksi area visual yang mencurigakan."
+    body: "AI mendeteksi area yang mencurigakan."
   },
   {
     title: "Overlay Ditampilkan",
-    body: "Area yang terdeteksi ditandai dengan overlay merah pada foto asli."
+    body: "Area terdeteksi ditandai overlay merah."
   }
 ];
 
@@ -26,7 +26,7 @@ export default function HowItWorksPage() {
     <Section
       eyebrow="Alur Skrining"
       title="Cara DentRay Bekerja"
-      description="Tiga langkah sederhana untuk mendapatkan hasil skrining visual dari foto gigi Anda."
+      description="Tiga langkah sederhana, satu hasil visual."
     >
       <div className="grid gap-4 md:grid-cols-3">
         {workflow.map((item, index) => (

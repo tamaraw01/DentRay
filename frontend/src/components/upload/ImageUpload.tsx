@@ -56,7 +56,7 @@ export function ImageUpload({ disabled = false, onImageSelected }: ImageUploadPr
         <span>
           <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-lg font-extrabold text-clinical-700 shadow-sm ring-1 ring-slate-200">+</span>
           <span className="block text-base font-bold text-clinical-900">Unggah Foto Gigi</span>
-          <span className="mt-2 block text-sm leading-6 text-slate-600">Format JPG, JPEG, atau PNG · Maks. 8 MB</span>
+          <span className="mt-2 block text-sm leading-6 text-slate-600">JPG atau PNG · Maks. 8 MB</span>
         </span>
       </label>
 

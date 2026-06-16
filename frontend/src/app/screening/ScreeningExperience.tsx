@@ -23,8 +23,8 @@ const inputOptions: Array<{
   title: string;
   body: string;
 }> = [
-  { id: "camera", title: "Kamera Langsung", body: "Ambil foto langsung dari kamera perangkat." },
-  { id: "upload", title: "Unggah Foto", body: "Pilih dari galeri atau file manager." }
+  { id: "camera", title: "Kamera Langsung", body: "Ambil foto langsung." },
+  { id: "upload", title: "Unggah Foto", body: "Pilih dari galeri." }
 ];
 
 export function ScreeningExperience() {
@@ -139,7 +139,7 @@ export function ScreeningExperience() {
             <div className="relative z-10">
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Skrining Visual</p>
               <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Skrining Gigi</h1>
-              <p className="mt-3 text-sm leading-6 text-slate-600">Satu foto yang jelas sudah cukup untuk memulai.</p>
+              <p className="mt-3 text-sm leading-6 text-slate-600">Satu foto yang jelas sudah cukup.</p>
 
               {!pendingImage && !selectedImage && (
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -168,7 +168,7 @@ export function ScreeningExperience() {
                 </div>
               )}
 
-              <p className="mt-5 text-sm leading-6 text-slate-500">Hasil merupakan skrining visual, bukan diagnosis klinis.</p>
+              <p className="mt-5 text-sm leading-6 text-slate-500">Bukan diagnosis klinis.</p>
             </div>
           </div>
         </Card>
@@ -199,12 +199,12 @@ export function ScreeningExperience() {
               <div>
                 <div className="grid gap-4 lg:grid-cols-[0.8fr_1fr] lg:items-center">
                   <div className="flex max-h-[34rem] w-full items-center justify-center overflow-hidden rounded-[1.4rem] border border-clinical-100 bg-clinical-50 p-2">
-                    <img alt="Citra gigi yang dipilih" className="h-auto max-h-[33rem] w-auto max-w-full object-contain" src={selectedImage.previewUrl} />
+                    <img alt="Foto gigi yang dipilih" className="h-auto max-h-[33rem] w-auto max-w-full object-contain" src={selectedImage.previewUrl} />
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Tinjau Foto</p>
                     <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Foto Siap Dianalisis</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan area gigi terlihat jelas pada foto.</p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
                     <ImageQualityNotice
                       error={qualityError}
                       isChecking={isCheckingQuality}

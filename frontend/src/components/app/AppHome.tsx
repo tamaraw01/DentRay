@@ -30,14 +30,14 @@ export function AppHome() {
         <section className="glass-card overflow-hidden rounded-[2rem] p-5 sm:p-7 lg:p-8">
           <div className="grid gap-5 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
             <div className="relative z-10">
-              <p className="text-sm font-semibold text-slate-500">Selamat datang, {user.fullName || user.email}</p>
+              <p className="text-sm font-semibold text-slate-500">Halo, {user.fullName || user.email}</p>
               <h1 className="mt-8 max-w-xl text-4xl font-bold tracking-[-0.045em] text-slate-950 sm:text-5xl">Skrining Gigi Anda</h1>
-              <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">Ambil satu foto gigi yang jelas, dan DentRay akan menandai area yang perlu diperhatikan.</p>
+              <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">Satu foto yang jelas sudah cukup.</p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                 <LinkButton href="/app/scan">Mulai Skrining</LinkButton>
                 <LinkButton href="/app/history" variant="secondary">Riwayat</LinkButton>
               </div>
-              <p className="mt-5 text-xs font-semibold text-slate-500">Hasil bersifat indikatif, bukan diagnosis klinis.</p>
+              <p className="mt-5 text-xs font-semibold text-slate-500">Bukan diagnosis klinis.</p>
             </div>
 
             <MascotCard animated className="min-h-[250px]" priority variant="card" />

@@ -34,7 +34,7 @@ export function ProfilePanel() {
           <div>
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Akun Saya</p>
           <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950">Profil Pengguna</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Informasi akun DentRay Anda.</p>
+          <p className="mt-2 text-sm leading-6 text-slate-600">Akun DentRay.</p>
           <p className="mt-4 text-sm font-bold text-slate-800">{user.fullName || "Pengguna DentRay"}</p>
           <p className="text-sm leading-6 text-slate-600">{user.email}</p>
           </div>
@@ -48,13 +48,13 @@ export function ProfilePanel() {
         </Card>
         <Card>
           <p className="text-lg font-extrabold text-slate-950">Catatan Medis</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">DentRay hanya untuk skrining visual awal, bukan diagnosis.</p>
+          <p className="mt-2 text-sm leading-6 text-slate-600">Bukan pengganti dokter gigi.</p>
         </Card>
       </div>
       <Card>
         <p className="text-lg font-extrabold text-slate-950">Pasang Aplikasi</p>
         <p className="mt-2 text-sm leading-6 text-slate-600">
-          {isStandalone ? "DentRay sudah terpasang di perangkat Anda." : "Pasang DentRay ke layar utama untuk akses lebih cepat."}
+          {isStandalone ? "Sudah terpasang." : "Buka lebih cepat dari layar utama."}
         </p>
         <Button
           className="mt-4"

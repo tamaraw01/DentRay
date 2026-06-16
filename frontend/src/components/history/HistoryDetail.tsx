@@ -54,7 +54,7 @@ export function HistoryDetail({ id }: HistoryDetailProps) {
       {results.map((result) => (
         <Card key={result.id}>
           <h2 className="text-xl font-extrabold text-slate-950">Hasil Overlay</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Area yang terdeteksi AI ditandai dengan overlay pada foto berikut.</p>
+          <p className="mt-2 text-sm leading-6 text-slate-600">Area terdeteksi ditandai overlay.</p>
           <div className="mt-4 rounded-[1.35rem] border border-clinical-200 bg-white p-3 shadow-[0_16px_38px_rgba(37,99,235,0.08)]">
             {result.overlay_image_url ? (
               <div className="flex max-h-[70svh] items-center justify-center overflow-hidden rounded-xl bg-clinical-50/70 p-2">
@@ -68,7 +68,7 @@ export function HistoryDetail({ id }: HistoryDetailProps) {
         </Card>
       ))}
       <Card className="border-amber-200/70 bg-amber-50/80 shadow-none">
-        <p className="text-sm leading-6 text-amber-900">Hasil merupakan skrining visual awal dan bukan pengganti pemeriksaan dokter gigi profesional.</p>
+        <p className="text-sm leading-6 text-amber-900">Skrining visual awal. Bukan pengganti dokter gigi.</p>
       </Card>
     </div>
   );
