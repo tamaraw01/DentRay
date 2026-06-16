@@ -11,7 +11,7 @@ export function Navbar() {
         <Link className="flex min-w-0 shrink-0 items-center gap-3" href="/" aria-label="DentRay beranda">
           <BrandLogo showText size="sm" />
           <span className="hidden sm:block">
-            <span className="hidden text-xs font-semibold text-slate-500 sm:block">Riksa awal</span>
+            <span className="hidden text-xs font-semibold text-slate-500 sm:block">Skrining visual</span>
           </span>
         </Link>
         <div className="hidden min-w-0 items-center justify-center gap-0.5 md:flex lg:gap-1">
@@ -27,7 +27,7 @@ export function Navbar() {
         </div>
         <div className="flex items-center gap-2">
           <LinkButton className="hidden lg:inline-flex" href="/login">
-            Mulai scan
+            Mulai Skrining
           </LinkButton>
         </div>
       </nav>

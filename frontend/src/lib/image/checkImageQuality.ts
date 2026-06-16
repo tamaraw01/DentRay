@@ -17,11 +17,11 @@ const VERY_BLURRY_THRESHOLD = 12;
 const BLURRY_THRESHOLD = 35;
 
 const issueMessages: Record<ImageQualityIssue, string> = {
-  low_contrast: "Detail gigi kurang terlihat. Ambil ulang dari jarak yang lebih dekat.",
-  too_blurry: "Foto kurang tajam. Ambil ulang dengan posisi lebih stabil.",
-  too_bright: "Cahaya terlalu kuat. Kurangi pantulan pada gigi.",
-  too_dark: "Pencahayaan kurang. Coba arahkan ke cahaya yang lebih baik.",
-  too_small: "Resolusi foto terlalu rendah. Gunakan kamera atau foto yang lebih jelas."
+  low_contrast: "Kontras foto rendah — pastikan gigi terlihat jelas dari latar belakang.",
+  too_blurry: "Foto terlalu buram. Tahan perangkat lebih stabil saat mengambil foto.",
+  too_bright: "Foto terlalu terang. Kurangi sumber cahaya atau hindari pantulan langsung.",
+  too_dark: "Foto terlalu gelap. Gunakan pencahayaan yang lebih baik saat memotret.",
+  too_small: "Resolusi foto terlalu rendah. Gunakan kamera perangkat untuk kualitas lebih baik."
 };
 
 function calculateLaplacianVariance(

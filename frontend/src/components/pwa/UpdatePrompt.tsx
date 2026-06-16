@@ -28,14 +28,14 @@ export function UpdatePrompt() {
       <div className="flex items-start gap-3">
         <BrandLogo className="shrink-0" size="sm" />
         <div className="min-w-0 flex-1">
-          <h2 className="text-base font-bold text-slate-950">Pembaruan tersedia</h2>
-          <p className="mt-1 text-sm leading-6 text-slate-600">Muat ulang DentRay untuk memakai versi terbaru.</p>
+          <h2 className="text-base font-bold text-slate-950">Versi Baru Tersedia</h2>
+          <p className="mt-1 text-sm leading-6 text-slate-600">Perbarui DentRay untuk mendapatkan versi terbaru.</p>
         </div>
       </div>
 
       <div className="mt-4 flex gap-2">
         <Button className="flex-1" onClick={() => void reloadWithUpdate()} type="button">
-          Muat ulang
+          Perbarui Sekarang
         </Button>
         <Button className="flex-1" onClick={dismissUpdate} type="button" variant="secondary">
           Nanti

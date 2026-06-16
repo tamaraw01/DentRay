@@ -65,11 +65,11 @@ export function ImageAdjuster({ aspectRatio, imageSrc, onConfirm, onRetake }: Im
   return (
     <section aria-labelledby="image-adjuster-title" className="space-y-5">
       <div>
-        <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Periksa citra</p>
+        <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Sesuaikan Foto</p>
         <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950" id="image-adjuster-title">
-          Sesuaikan foto
+          Posisikan Foto
         </h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan area gigi terpusat dan terlihat jelas dalam frame.</p>
       </div>
 
       <div
@@ -95,9 +95,9 @@ export function ImageAdjuster({ aspectRatio, imageSrc, onConfirm, onRetake }: Im
 
       <div className="rounded-[1.4rem] border border-slate-200/80 bg-slate-50/80 p-4">
         <label className="grid gap-2 text-sm font-bold text-slate-700">
-          <span>Perbesar</span>
+          <span>Zoom</span>
           <input
-            aria-label="Perbesar foto"
+            aria-label="Zoom foto"
             className="h-2 w-full cursor-pointer accent-clinical-600"
             max="3"
             min="1"
@@ -113,13 +113,13 @@ export function ImageAdjuster({ aspectRatio, imageSrc, onConfirm, onRetake }: Im
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
         <Button disabled={isProcessing || !croppedAreaPixels} onClick={() => void confirmAdjustment()} type="button">
-          {isProcessing ? "Menyiapkan foto..." : "Gunakan foto"}
+          {isProcessing ? "Menyiapkan..." : "Gunakan Foto Ini"}
         </Button>
         <Button disabled={isProcessing} onClick={resetAdjustment} type="button" variant="secondary">
-          Reset
+          Atur Ulang
         </Button>
         <Button disabled={isProcessing} onClick={onRetake} type="button" variant="ghost">
-          Ambil ulang
+          Ganti Foto
         </Button>
       </div>
     </section>

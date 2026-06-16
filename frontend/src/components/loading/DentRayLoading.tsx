@@ -8,10 +8,10 @@ type DentRayLoadingProps = {
 };
 
 const defaultMessages = {
-  auth: "Menyiapkan akun",
-  inline: "Sebentar…",
+  auth: "Memuat akun Anda",
+  inline: "Sebentar...",
   page: "Menyiapkan DentRay",
-  scan: "Membaca citra"
+  scan: "Menganalisis foto"
 } as const;
 
 function ToothLoader() {

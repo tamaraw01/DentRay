@@ -296,8 +296,8 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
   return (
     <div className="space-y-4">
       <div>
-        <h2 className="text-xl font-bold tracking-[-0.025em] text-slate-950">Ambil foto</h2>
-        <p className="mt-1 text-sm text-slate-600">Posisikan gigi di dalam frame.</p>
+        <h2 className="text-xl font-bold tracking-[-0.025em] text-slate-950">Ambil Foto Gigi</h2>
+        <p className="mt-1 text-sm text-slate-600">Posisikan area gigi di dalam frame dengan pencahayaan cukup.</p>
       </div>
       <div className="overflow-hidden rounded-[1.65rem] border border-slate-200 bg-slate-100 shadow-[0_14px_34px_rgba(15,23,42,0.05)]">
         <div
@@ -316,13 +316,13 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
           />
           {state === "ready" && (
             <button
-              aria-label="Ganti kamera"
+              aria-label="Kamera Lain"
               className="absolute right-3 top-3 rounded-full border border-white/80 bg-white/95 px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500"
               onClick={switchCamera}
-              title={cameraCount > 1 ? "Ganti kamera" : "Coba kamera lain"}
+              title={cameraCount > 1 ? "Kamera Lain" : "Coba Kamera Lain"}
               type="button"
             >
-              Ganti kamera
+              Kamera Lain
             </button>
           )}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -341,20 +341,20 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
           )}
         </div>
       </div>
-      <p className="text-sm text-slate-500">Gunakan pencahayaan yang cukup.</p>
+      <p className="text-sm text-slate-500">Pastikan ruangan cukup terang untuk hasil terbaik.</p>
 
       {error && <p className="rounded-2xl bg-red-50 p-3 text-sm leading-6 text-red-700">{error}</p>}
 
       <div className="grid gap-3 sm:grid-cols-3">
         <Button disabled={disabled || state !== "ready"} onClick={capturePhoto} type="button">
-          Ambil foto
+          Ambil Foto
         </Button>
         <Button disabled={disabled || state === "starting"} onClick={switchCamera} type="button" variant="secondary">
-          Ganti kamera
+          Kamera Lain
         </Button>
         {onUploadRequested && (
           <Button disabled={disabled} onClick={onUploadRequested} type="button" variant="ghost">
-            Upload foto
+            Unggah Foto
           </Button>
         )}
       </div>

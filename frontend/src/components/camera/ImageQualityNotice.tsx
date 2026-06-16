@@ -47,7 +47,7 @@ export function ImageQualityNotice({
       role={quality.ok ? "status" : "alert"}
     >
       <p className="font-semibold">{quality.message}</p>
-      {quality.ok && <p className="mt-0.5 opacity-75">Foto masih dapat dianalisis.</p>}
+      {quality.ok && <p className="mt-0.5 opacity-75">Foto masih dapat dianalisis meski ada catatan di atas.</p>}
     </div>
   );
 }

@@ -20,7 +20,7 @@ type AuthCardProps = {
 const content = {
   login: {
     title: "Masuk",
-    subtitle: "Lanjutkan skrining awal.",
+    subtitle: "Masuk untuk melanjutkan skrining Anda.",
     button: "Masuk",
     footer: "Belum punya akun?",
     footerLink: "/signup",
@@ -28,16 +28,16 @@ const content = {
   },
   signup: {
     title: "Daftar",
-    subtitle: "Simpan riwayat skrining.",
+    subtitle: "Daftar untuk menyimpan riwayat skrining.",
     button: "Daftar",
     footer: "Sudah punya akun?",
     footerLink: "/login",
     footerLabel: "Masuk"
   },
   forgot: {
-    title: "Reset password",
-    subtitle: "Masukkan email Anda.",
-    button: "Kirim tautan",
+    title: "Reset Password",
+    subtitle: "Masukkan alamat email akun Anda.",
+    button: "Kirim Tautan",
     footer: "Ingat password?",
     footerLink: "/login",
     footerLabel: "Masuk"

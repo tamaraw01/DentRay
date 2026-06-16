@@ -48,13 +48,13 @@ export function DetectionExample({
 }: DetectionExampleProps) {
   const cards: ExampleCard[] = [
     {
-      description: "Foto gigi masuk.",
-      label: "Foto",
+      description: "Foto gigi asli yang dianalisis oleh model AI.",
+      label: "Foto Asli",
       src: originalSrc ?? defaultExampleImages.original
     },
     {
-      description: "Area ditandai pada overlay.",
-      label: "Overlay",
+      description: "Area yang terdeteksi ditandai dengan overlay merah.",
+      label: "Hasil Overlay",
       src: overlaySrc ?? defaultExampleImages.overlay
     }
   ];
@@ -65,7 +65,7 @@ export function DetectionExample({
       className={cn("glass-card rounded-[1.9rem] p-3 sm:p-4", className)}
     >
       <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-sm font-extrabold text-slate-950">Contoh hasil overlay.</p>
+        <p className="text-sm font-extrabold text-slate-950">Contoh Hasil Overlay DentRay</p>
         <span className="rounded-full border border-clinical-200/80 bg-clinical-50/70 px-3 py-1 text-xs font-bold text-clinical-700">
           AI
         </span>

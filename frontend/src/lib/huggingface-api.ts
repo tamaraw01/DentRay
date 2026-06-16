@@ -72,6 +72,6 @@ export async function predictWithHuggingFace(file: File, source: string): Promis
       throw error;
     }
 
-    throw new Error("Backend AI sedang memulai ulang. Coba beberapa saat lagi.");
+    throw new Error("Backend AI sedang tidak tersedia. Tunggu beberapa saat, lalu coba kembali.");
   }
 }

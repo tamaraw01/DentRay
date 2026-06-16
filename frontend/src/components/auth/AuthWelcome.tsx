@@ -43,13 +43,13 @@ function useUrlAuthMode() {
 function sheetContent(mode: AuthMode) {
   if (mode === "signup") {
     return {
-      subtitle: "Simpan riwayat skrining.",
-      title: "Buat akun"
+      subtitle: "Daftar untuk menyimpan riwayat skrining.",
+      title: "Buat Akun"
     };
   }
 
   return {
-    subtitle: "Lanjutkan skrining.",
+    subtitle: "Masuk dengan akun DentRay Anda.",
     title: "Masuk"
   };
 }
@@ -110,10 +110,10 @@ export function AuthWelcome() {
           <div className="flex flex-1 flex-col justify-end pb-28">
             <div className={`max-w-[17rem] transition duration-300 ${isSheetOpen ? "-translate-y-6 opacity-55" : "translate-y-0 opacity-100"}`}>
               <h1 className="text-[3.05rem] font-bold leading-[1] tracking-[-0.055em] text-slate-950">
-                Riksa awal, dari satu citra.
+                Skrining awal, dari satu foto.
               </h1>
-              <p className="mt-4 text-base font-medium leading-7 text-slate-600">DentRay membantu menandai area visual pada foto gigi.</p>
-              <p className="mt-3 text-sm font-semibold text-slate-500">Bukan pengganti pemeriksaan dokter.</p>
+              <p className="mt-4 text-base font-medium leading-7 text-slate-600">DentRay menganalisis foto gigi dan menandai area yang perlu diperhatikan secara visual.</p>
+              <p className="mt-3 text-sm font-semibold text-slate-500">Hasil skrining visual, bukan pengganti pemeriksaan dokter gigi.</p>
             </div>
           </div>
         </div>

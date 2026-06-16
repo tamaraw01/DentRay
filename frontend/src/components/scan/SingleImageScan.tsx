@@ -25,8 +25,8 @@ const inputOptions: Array<{
   title: string;
   body: string;
 }> = [
-  { id: "camera", title: "Kamera", body: "Ambil citra langsung." },
-  { id: "upload", title: "Upload", body: "Pilih foto dari galeri." }
+  { id: "camera", title: "Kamera", body: "Ambil foto langsung dari kamera perangkat." },
+  { id: "upload", title: "Unggah Foto", body: "Pilih dari galeri atau file manager." }
 ];
 
 export function SingleImageScan() {
@@ -121,7 +121,7 @@ export function SingleImageScan() {
       };
       setResult(prediction);
       await saveScanSession(user, [scanResult]);
-      setProgress("Hasil tersimpan");
+      setProgress("Riwayat tersimpan");
     } catch (scanError) {
       setError(scanError instanceof Error ? scanError.message : "Analisis gagal. Coba ulangi.");
       setProgress("");
@@ -135,9 +135,9 @@ export function SingleImageScan() {
       <Card className="overflow-hidden rounded-[1.9rem] p-5 sm:p-7">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Riksa awal</p>
-            <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Scan gigi</h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">Cukup satu foto yang jelas.</p>
+            <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Skrining Visual</p>
+            <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Skrining Gigi</h1>
+            <p className="mt-3 text-sm leading-6 text-slate-600">Cukup satu foto gigi yang jelas dan terang.</p>
           </div>
           <span className="rounded-full border border-clinical-100 bg-clinical-50 px-3 py-1 text-xs font-bold text-clinical-700">AI</span>
         </div>
@@ -188,7 +188,7 @@ export function SingleImageScan() {
               )}
             </>
           ) : isAnalyzing ? (
-            <DentRayLoading message="Membaca citra" variant="scan" />
+            <DentRayLoading message="Menganalisis foto" variant="scan" />
           ) : (
             <div>
               <div className="grid gap-4 lg:grid-cols-[0.8fr_1fr] lg:items-center">
@@ -196,9 +196,9 @@ export function SingleImageScan() {
                   <img alt="Citra gigi yang dipilih" className="h-auto max-h-[33rem] w-auto max-w-full object-contain" src={selectedImage.previewUrl} />
                 </div>
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Periksa citra</p>
-                  <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Citra siap</h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Tinjau Foto</p>
+                  <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Foto Siap Dianalisis</h2>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas sebelum memulai analisis.</p>
                   <ImageQualityNotice
                     error={qualityError}
                     isChecking={isCheckingQuality}
@@ -212,10 +212,10 @@ export function SingleImageScan() {
                       onClick={analyze}
                       type="button"
                     >
-                      Analisis
+                      Mulai Analisis
                     </Button>
                     <Button disabled={isAnalyzing} onClick={resetFlow} type="button" variant="secondary">
-                      Ambil ulang
+                      Ganti Foto
                     </Button>
                   </div>
                 </div>

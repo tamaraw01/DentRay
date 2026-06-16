@@ -24,9 +24,9 @@ export function HistoryList() {
     <div className="space-y-4">
       <div className="glass-card rounded-[1.9rem] p-5">
         <div className="relative z-10">
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Tersimpan</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950">Riwayat</h1>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Hasil tersimpan.</p>
+          <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Riwayat Anda</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950">Riwayat Skrining</h1>
+          <p className="mt-2 text-sm leading-6 text-slate-600">Semua sesi skrining tersimpan di sini.</p>
         </div>
       </div>
       {error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{error}</p>}
@@ -36,8 +36,8 @@ export function HistoryList() {
             <DentRayMascot size="sm" />
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-950">Belum ada hasil tersimpan.</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">Mulai scan untuk menyimpan riwayat pertama.</p>
+            <h2 className="text-lg font-bold text-slate-950">Belum ada riwayat skrining.</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">Lakukan skrining pertama Anda untuk mulai menyimpan riwayat.</p>
           </div>
         </Card>
       ) : (
@@ -46,10 +46,10 @@ export function HistoryList() {
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
               {new Date(session.created_at).toLocaleString("id-ID")}
             </p>
-            <h2 className="mt-2 text-xl font-bold text-slate-950">Hasil skrining</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">{session.total_images} citra dianalisis.</p>
+            <h2 className="mt-2 text-xl font-bold text-slate-950">Sesi Skrining</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{session.total_images} foto dianalisis dalam sesi ini.</p>
             <Link className="mt-4 inline-block rounded-[1rem] bg-clinical-50 px-4 py-2 text-sm font-bold text-clinical-700" href={`/app/history/${session.id}`}>
-              Lihat detail
+              Lihat Detail
             </Link>
           </Card>
         ))

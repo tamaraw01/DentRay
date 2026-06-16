@@ -3,7 +3,7 @@ import { brandConfig } from "@/config/brand";
 export const siteConfig = {
   name: brandConfig.appName,
   tagline: brandConfig.tagline,
-  description: "DentRay membantu menandai area yang dicurigai sebagai karies dari foto gigi.",
+  description: "DentRay menganalisis foto gigi dan menandai area visual yang mencurigakan menggunakan AI segmentasi.",
   configuredApiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "",
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000",
   aiBackendUrl: process.env.NEXT_PUBLIC_AI_BACKEND_URL ?? "",

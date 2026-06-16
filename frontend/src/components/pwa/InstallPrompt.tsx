@@ -26,12 +26,12 @@ export function InstallPrompt() {
   const needsRaisedPosition = isAppRoute || pathname === "/";
   const usesManualInstructions = isIOSSafari || !canAutoInstall;
   const title = isIOSSafari ? "Tambahkan ke Layar Utama" : "Pasang DentRay";
-  let subtitle = "Buka menu browser, lalu pilih Tambahkan ke layar utama.";
+  let subtitle = "Buka menu browser, lalu pilih 'Tambahkan ke layar utama'.";
 
   if (isIOSSafari) {
-    subtitle = "Ketuk tombol Bagikan, lalu pilih Tambahkan ke Layar Utama.";
+    subtitle = "Ketuk ikon Bagikan di Safari, lalu pilih 'Tambahkan ke Layar Utama'.";
   } else if (canAutoInstall) {
-    subtitle = "Buka lebih cepat dari layar utama.";
+    subtitle = "Akses DentRay lebih cepat langsung dari layar utama perangkat.";
   }
 
   return (

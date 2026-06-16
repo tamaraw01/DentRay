@@ -23,8 +23,8 @@ const inputOptions: Array<{
   title: string;
   body: string;
 }> = [
-  { id: "camera", title: "Kamera", body: "Ambil citra langsung." },
-  { id: "upload", title: "Upload", body: "Pilih foto dari galeri." }
+  { id: "camera", title: "Kamera Langsung", body: "Ambil foto langsung dari kamera perangkat." },
+  { id: "upload", title: "Unggah Foto", body: "Pilih dari galeri atau file manager." }
 ];
 
 export function ScreeningExperience() {
@@ -137,9 +137,9 @@ export function ScreeningExperience() {
 
           <div className="m-3 rounded-[1.6rem] border border-slate-100 bg-slate-50/80 p-5 sm:m-4 sm:p-7">
             <div className="relative z-10">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Riksa awal</p>
-              <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Scan gigi</h1>
-              <p className="mt-3 text-sm leading-6 text-slate-600">Cukup satu foto yang jelas.</p>
+              <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Skrining Visual</p>
+              <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Skrining Gigi</h1>
+              <p className="mt-3 text-sm leading-6 text-slate-600">Satu foto yang jelas sudah cukup untuk memulai.</p>
 
               {!pendingImage && !selectedImage && (
                 <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -168,7 +168,7 @@ export function ScreeningExperience() {
                 </div>
               )}
 
-              <p className="mt-5 text-sm leading-6 text-slate-500">Bukan pengganti pemeriksaan dokter.</p>
+              <p className="mt-5 text-sm leading-6 text-slate-500">Hasil merupakan skrining visual, bukan diagnosis klinis.</p>
             </div>
           </div>
         </Card>
@@ -194,7 +194,7 @@ export function ScreeningExperience() {
                 <ImageUpload disabled={isAnalyzing} onImageSelected={(file, previewUrl) => beginAdjustment(file, previewUrl, "upload")} />
               )
             ) : isAnalyzing ? (
-              <DentRayLoading message="Membaca citra" variant="scan" />
+              <DentRayLoading message="Menganalisis foto" variant="scan" />
             ) : (
               <div>
                 <div className="grid gap-4 lg:grid-cols-[0.8fr_1fr] lg:items-center">
@@ -202,9 +202,9 @@ export function ScreeningExperience() {
                     <img alt="Citra gigi yang dipilih" className="h-auto max-h-[33rem] w-auto max-w-full object-contain" src={selectedImage.previewUrl} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Periksa citra</p>
-                    <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Citra siap</h2>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Tinjau Foto</p>
+                    <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Foto Siap Dianalisis</h2>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan area gigi terlihat jelas pada foto.</p>
                     <ImageQualityNotice
                       error={qualityError}
                       isChecking={isCheckingQuality}
@@ -217,10 +217,10 @@ export function ScreeningExperience() {
                         onClick={analyze}
                         type="button"
                       >
-                        Analisis
+                        Mulai Analisis
                       </Button>
                       <Button disabled={isAnalyzing} onClick={resetFlow} type="button" variant="secondary">
-                        Ambil ulang
+                        Ganti Foto
                       </Button>
                     </div>
                   </div>

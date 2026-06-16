@@ -54,7 +54,7 @@ export function SignInForm({ onSwitchToSignUp }: SignInFormProps) {
       </Link>
       {error && <p className="rounded-[1.1rem] bg-red-50 p-3 text-sm text-red-700">{error}</p>}
       <Button className="min-h-[3.2rem] w-full rounded-[1.4rem]" disabled={isSubmitting || !isSupabaseConfigured()} type="submit">
-        {isSubmitting ? "Memproses..." : "Masuk"}
+        {isSubmitting ? "Masuk..." : "Masuk"}
       </Button>
       <p className="text-center text-sm text-slate-500">
         Belum punya akun?{" "}

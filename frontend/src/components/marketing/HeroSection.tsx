@@ -18,12 +18,12 @@ export function HeroSection() {
               DentRay
             </h1>
             <p className="mt-5 text-2xl font-extrabold tracking-[-0.02em] text-slate-950 sm:text-3xl">
-              Riksa awal, dari satu citra.
+              Skrining awal, dari satu foto.
             </p>
             <p className="mx-auto mt-4 max-w-md text-base leading-7 text-slate-600 lg:mx-0">
-              DentRay membantu menandai area visual pada foto gigi.
+              DentRay menganalisis foto gigi dan menandai area yang perlu diperhatikan secara visual.
             </p>
-            <p className="mt-4 text-sm font-semibold text-slate-500">Bukan pengganti pemeriksaan dokter.</p>
+            <p className="mt-4 text-sm font-semibold text-slate-500">Hasil skrining visual, bukan pengganti pemeriksaan dokter gigi.</p>
           </div>
 
           <div className="order-1 lg:order-2">
