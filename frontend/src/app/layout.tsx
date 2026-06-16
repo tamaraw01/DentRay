@@ -55,26 +55,23 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html className={`${plusJakarta.variable} ${inter.variable}`} lang="id">
       <body>
         <div aria-hidden="true" className="dentray-splash" id="dentray-splash">
-          <div className="dentray-splash__card-wrapper">
-            <div className="dentray-splash__card">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt=""
-                className="dentray-splash__icon"
-                height={88}
-                src="/brand/dentray-icon-512.png"
-                width={88}
-              />
-              <div className="dentray-splash__scan" />
-            </div>
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            alt=""
+            className="dentray-splash__icon"
+            height={120}
+            src="/brand/dentray-icon-512.png"
+            width={120}
+          />
           <p className="dentray-splash__wordmark">DentRay</p>
-          <div aria-hidden="true" className="dentray-splash__dots">
-            <span />
-            <span />
-            <span />
-          </div>
+          <div className="dentray-splash__bar" />
         </div>
+        {/* Fallback: removes splash if React fails to mount within 5s */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){setTimeout(function(){var s=document.getElementById('dentray-splash');if(s){s.style.transition='opacity 0.28s ease';s.style.opacity='0';setTimeout(function(){s&&s.remove();},300);}},5000);})();`
+          }}
+        />
         <AppChrome>{children}</AppChrome>
         <SplashScreen />
       </body>

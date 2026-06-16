@@ -7,18 +7,13 @@ export function SplashScreen() {
     const splash = document.getElementById("dentray-splash");
     if (!splash) return;
 
-    const fadeTimer = setTimeout(() => {
-      splash.classList.add("dentray-splash--out");
-    }, 80);
+    splash.classList.add("dentray-splash--out");
 
     const removeTimer = setTimeout(() => {
       splash.remove();
-    }, 520);
+    }, 320);
 
-    return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(removeTimer);
-    };
+    return () => clearTimeout(removeTimer);
   }, []);
 
   return null;
