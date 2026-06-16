@@ -6,7 +6,7 @@ import { siteConfig } from "@/config/site";
 
 export function Navbar() {
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-[#F7FAFF]/82 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-slate-200/40 bg-[#eef2f8]/90 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <Link className="flex min-w-0 shrink-0 items-center gap-3" href="/" aria-label="DentRay beranda">
           <BrandLogo showText size="sm" />

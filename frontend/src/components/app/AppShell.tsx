@@ -61,8 +61,8 @@ export function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen px-3 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-4 sm:px-5 md:pb-8">
       <UserContext.Provider value={user}>
-        <div className="app-frame mx-auto grid max-w-6xl gap-5 rounded-[2rem] p-3 sm:rounded-[2.35rem] sm:p-5 lg:grid-cols-[84px_minmax(0,1fr)]">
-          <aside className="sticky top-24 hidden h-[calc(100vh-8rem)] flex-col items-center justify-between rounded-[2rem] border border-slate-200/80 bg-white/95 px-3 py-5 shadow-[0_18px_50px_rgba(15,23,42,0.06)] lg:flex">
+        <div className="mx-auto grid max-w-6xl gap-4 sm:gap-5 lg:grid-cols-[76px_minmax(0,1fr)]">
+          <aside className="sticky top-5 hidden h-[calc(100vh-2.5rem)] flex-col items-center justify-between rounded-[1.75rem] bg-white px-2.5 py-5 shadow-[0_4px_20px_rgba(15,23,42,0.07)] lg:flex">
             <Link aria-label="DentRay beranda" href="/app">
               <BrandLogo size="sm" />
             </Link>
@@ -73,10 +73,10 @@ export function AppShell({ children }: AppShellProps) {
                 return (
                   <Link
                     aria-label={item.label}
-                    className={`flex h-12 w-12 items-center justify-center rounded-2xl transition ${
+                    className={`flex h-11 w-11 items-center justify-center rounded-[0.875rem] transition-all ${
                       isActive
-                        ? "bg-clinical-600 text-white shadow-[0_12px_28px_rgba(37,99,235,0.18)]"
-                        : "bg-slate-50 text-slate-500 hover:bg-white hover:text-clinical-700"
+                        ? "bg-clinical-600 text-white shadow-[0_8px_20px_rgba(11,124,255,0.24)]"
+                        : "text-slate-400 hover:bg-slate-50 hover:text-slate-700"
                     }`}
                     href={item.href}
                     key={item.href}
@@ -90,7 +90,7 @@ export function AppShell({ children }: AppShellProps) {
 
             <button
               aria-label="Keluar"
-              className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-50 text-slate-500 shadow-sm transition hover:bg-white hover:text-red-600"
+              className="flex h-11 w-11 items-center justify-center rounded-[0.875rem] text-slate-400 transition-all hover:bg-red-50 hover:text-red-500"
               onClick={handleLogout}
               title="Keluar"
               type="button"

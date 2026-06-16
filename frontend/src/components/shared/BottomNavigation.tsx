@@ -58,7 +58,7 @@ export function BottomNavigation({ pathname }: BottomNavigationProps) {
   return (
     <nav
       aria-label="Navigasi aplikasi"
-      className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 mx-auto grid max-w-[430px] grid-cols-4 gap-1 overflow-hidden rounded-[1.65rem] border border-slate-200/90 bg-white p-1.5 text-slate-500 shadow-[0_14px_36px_rgba(15,23,42,0.11)] md:hidden"
+      className="fixed inset-x-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-40 mx-auto grid max-w-[430px] grid-cols-4 gap-1 overflow-hidden rounded-[1.5rem] bg-white p-1.5 text-slate-500 shadow-[0_4px_24px_rgba(15,23,42,0.10),0_1px_4px_rgba(15,23,42,0.05)] md:hidden"
     >
       {appNavItems.map((item) => {
         const isActive = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href);
@@ -68,10 +68,10 @@ export function BottomNavigation({ pathname }: BottomNavigationProps) {
             aria-current={isActive ? "page" : undefined}
             aria-label={item.label}
             className={cn(
-              "flex h-12 min-w-0 items-center justify-center rounded-[1.25rem] px-1 text-xs font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500 focus-visible:ring-offset-1",
+              "flex h-11 min-w-0 items-center justify-center rounded-[1.1rem] px-1 text-xs font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500 focus-visible:ring-offset-1",
               isActive
-                ? "bg-clinical-600 text-white shadow-[0_9px_22px_rgba(37,99,235,0.2)]"
-                : "text-slate-500 hover:bg-slate-50 hover:text-clinical-700"
+                ? "bg-clinical-600 text-white shadow-[0_6px_16px_rgba(11,124,255,0.22)]"
+                : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
             )}
             href={item.href}
             key={item.href}

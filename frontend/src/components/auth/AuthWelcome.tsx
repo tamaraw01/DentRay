@@ -89,11 +89,8 @@ export function AuthWelcome() {
   const activeSheet = sheetContent(mode);
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#F7FAFF] px-3 py-3 text-slate-950 sm:px-5 sm:py-5">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_10%,rgba(186,230,253,0.74),transparent_18rem),radial-gradient(circle_at_8%_78%,rgba(219,234,254,0.72),transparent_19rem),linear-gradient(180deg,#F7FAFF_0%,#F4F8FF_52%,#FFFFFF_100%)]" />
-
-      <div className="relative mx-auto h-[calc(100svh-1.5rem)] max-h-[880px] min-h-[680px] max-w-[520px] overflow-hidden rounded-[2.4rem] border border-slate-200/70 bg-white/[0.92] shadow-[0_24px_80px_rgba(15,23,42,0.08)] sm:h-[calc(100svh-2.5rem)]">
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.86)_0%,rgba(255,255,255,0.32)_45%,rgba(255,255,255,0.82)_100%)]" />
+    <section className="relative min-h-screen overflow-hidden bg-[#eef2f8] px-3 py-3 text-slate-950 sm:px-5 sm:py-5">
+      <div className="relative mx-auto h-[calc(100svh-1.5rem)] max-h-[880px] min-h-[680px] max-w-[520px] overflow-hidden rounded-[2.2rem] bg-white shadow-[0_8px_40px_rgba(15,23,42,0.08),0_2px_12px_rgba(15,23,42,0.05)] sm:h-[calc(100svh-2.5rem)]">
         <div
           className={`absolute right-[-7%] top-[7%] z-[2] flex h-[44%] w-[74%] items-center justify-center rounded-[42%_0_0_42%] bg-[linear-gradient(145deg,rgba(255,255,255,0.94),rgba(226,241,255,0.82))] shadow-[0_18px_50px_rgba(37,99,235,0.08)] transition duration-300 sm:right-[-3%] ${
             isSheetOpen ? "translate-x-8 opacity-0" : "translate-x-0 opacity-100"
