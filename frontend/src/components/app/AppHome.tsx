@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { useDentRayUser } from "@/components/app/AppShell";
-import { MascotShowcase } from "@/components/mascot/MascotShowcase";
+import { DentRayMascot } from "@/components/mascot/DentRayMascot";
 import { Glyph } from "@/components/ui/Glyph";
 import { IconBadge, type BadgeTone } from "@/components/ui/IconBadge";
 import { listScanSessions } from "@/lib/scan-storage";
@@ -94,13 +94,15 @@ export function AppHome() {
             </div>
           </div>
 
-          {/* Narrow reserved cell keeps the text column safe; the mascot itself
-              overflows this cell freely in every direction. */}
-          <div className="relative z-0 w-14 self-stretch sm:w-24 lg:w-40">
-            <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 sm:-right-2 lg:-right-4">
-              <MascotShowcase
+          {/* Narrow reserved cell keeps the text column safe; the pure mascot
+              overflows this cell freely and breaks past the card edges. */}
+          <div className="relative z-0 w-12 self-stretch sm:w-20 lg:w-32">
+            <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 sm:-right-3 lg:-right-6">
+              <DentRayMascot
+                animated
                 priority
-                sizeClassName="h-60 w-44 sm:h-[19rem] sm:w-56 lg:h-[26rem] lg:w-[19rem]"
+                size="lg"
+                sizeClassName="h-80 w-56 sm:h-[23rem] sm:w-[17rem] lg:h-[31rem] lg:w-[23rem]"
               />
             </div>
           </div>
