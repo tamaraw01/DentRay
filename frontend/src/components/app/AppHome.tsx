@@ -93,7 +93,11 @@ export function AppHome() {
             </div>
           </div>
 
-          <MascotShowcase className="-mr-1 sm:mr-0" priority />
+          <MascotShowcase
+            className="-mr-2 sm:mr-0"
+            priority
+            sizeClassName="h-40 w-28 sm:h-56 sm:w-40 lg:h-[17rem] lg:w-52"
+          />
         </div>
       </section>
 
