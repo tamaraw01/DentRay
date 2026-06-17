@@ -58,32 +58,34 @@ export function BottomNavigation({ pathname }: BottomNavigationProps) {
   return (
     <nav
       aria-label="Navigasi aplikasi"
-      className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 gap-1 border-t border-slate-200/80 bg-white px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] text-slate-500 shadow-[0_-2px_16px_rgba(15,23,42,0.06)] md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 rounded-t-[1.75rem] bg-white/95 px-3 pt-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-6px_28px_rgba(15,23,42,0.09)] backdrop-blur-xl md:hidden"
     >
-      {appNavItems.map((item) => {
-        const isActive = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href);
+      <div className="mx-auto grid max-w-md grid-cols-4">
+        {appNavItems.map((item) => {
+          const isActive = item.href === "/app" ? pathname === item.href : pathname.startsWith(item.href);
 
-        return (
-          <Link
-            aria-current={isActive ? "page" : undefined}
-            aria-label={item.label}
-            className={cn(
-              "flex h-11 min-w-0 items-center justify-center rounded-[1.1rem] px-1 text-xs font-bold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500 focus-visible:ring-offset-1",
-              isActive
-                ? "bg-clinical-600 text-white shadow-[0_6px_16px_rgba(11,124,255,0.22)]"
-                : "text-slate-400 hover:bg-slate-50 hover:text-slate-600"
-            )}
-            href={item.href}
-            key={item.href}
-          >
-            <span className="flex min-w-0 items-center justify-center gap-1.5">
-              <AppNavIcon name={item.icon} />
-              {isActive && <span className="truncate text-[0.68rem] leading-none min-[390px]:text-xs">{item.mobileLabel}</span>}
-              {!isActive && <span className="sr-only">{item.label}</span>}
-            </span>
-          </Link>
-        );
-      })}
+          return (
+            <Link
+              aria-current={isActive ? "page" : undefined}
+              aria-label={item.label}
+              className="flex items-center justify-center py-1 focus-visible:outline-none"
+              href={item.href}
+              key={item.href}
+            >
+              <span
+                className={cn(
+                  "flex h-11 w-11 items-center justify-center rounded-[1.05rem] transition-all duration-200 ease-out",
+                  isActive
+                    ? "scale-[1.18] bg-clinical-600 text-white shadow-[0_10px_22px_rgba(11,124,255,0.32)]"
+                    : "text-slate-400"
+                )}
+              >
+                <AppNavIcon name={item.icon} />
+              </span>
+            </Link>
+          );
+        })}
+      </div>
     </nav>
   );
 }

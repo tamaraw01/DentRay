@@ -12,7 +12,7 @@ import type { ScanSessionSummary } from "@/types/scan";
 
 const actionLinks = [
   { href: "/app/scan", label: "Mulai Skrining", icon: "scan", tone: "blue" },
-  { href: "/app/history", label: "Lihat Riwayat", icon: "history", tone: "green" },
+  { href: "/app/history", label: "Riwayat", icon: "history", tone: "green" },
   { href: "/how-it-works", label: "Cara Kerja", icon: "info", tone: "amber" },
   { href: "/app/profile", label: "Profil Saya", icon: "profile", tone: "violet" }
 ] as const;
