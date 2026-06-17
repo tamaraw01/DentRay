@@ -66,9 +66,10 @@ export function AppHome() {
 
   return (
     <div className="space-y-4">
-      {/* Greeting card */}
-      <section className="glass-card relative overflow-hidden rounded-[2rem] px-5 py-6 sm:px-8 sm:py-8">
-        <div className="grid grid-cols-[1fr_auto] items-center gap-2 sm:gap-6">
+      {/* Greeting card — mascot is free to break out of the frame and overlap,
+          but stays click-through (pointer-events-none) and behind the text. */}
+      <section className="glass-card relative z-20 rounded-[2rem] px-5 py-6 sm:px-8 sm:py-8">
+        <div className="grid grid-cols-[1fr_auto] items-center gap-2 sm:gap-4">
           <div className="relative z-10 max-w-md">
             <h1 className="text-[1.8rem] font-bold leading-[1.05] tracking-[-0.045em] text-slate-950 sm:text-[2.7rem]">
               Halo, {firstName}!
@@ -93,11 +94,16 @@ export function AppHome() {
             </div>
           </div>
 
-          <MascotShowcase
-            className="-mr-3 sm:mr-0"
-            priority
-            sizeClassName="h-44 w-32 sm:h-64 sm:w-48 lg:h-[20rem] lg:w-60"
-          />
+          {/* Narrow reserved cell keeps the text column safe; the mascot itself
+              overflows this cell freely in every direction. */}
+          <div className="relative z-0 w-14 self-stretch sm:w-24 lg:w-40">
+            <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 sm:-right-2 lg:-right-4">
+              <MascotShowcase
+                priority
+                sizeClassName="h-60 w-44 sm:h-[19rem] sm:w-56 lg:h-[26rem] lg:w-[19rem]"
+              />
+            </div>
+          </div>
         </div>
       </section>
 
