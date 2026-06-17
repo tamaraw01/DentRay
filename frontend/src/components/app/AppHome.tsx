@@ -69,7 +69,7 @@ export function AppHome() {
       {/* Greeting card — mascot is free to break out of the frame and overlap,
           but stays click-through (pointer-events-none) and behind the text. */}
       <section className="glass-card relative z-20 rounded-[2rem] px-5 py-6 sm:px-8 sm:py-8">
-        <div className="grid grid-cols-[1fr_auto] items-center gap-2 sm:gap-4">
+        <div className="grid grid-cols-[1fr_auto] items-center gap-3 sm:gap-4">
           <div className="relative z-10 max-w-md">
             <h1 className="text-[1.8rem] font-bold leading-[1.05] tracking-[-0.045em] text-slate-950 sm:text-[2.7rem]">
               Halo, {firstName}!
@@ -78,7 +78,7 @@ export function AppHome() {
               Mari jaga senyum Anda hari ini.
             </p>
 
-            <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-3.5 min-[420px]:grid-cols-2 sm:mt-6">
+            <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-3.5 sm:mt-6 sm:grid-cols-2">
               {actionLinks.map((item) => (
                 <Link
                   className="group flex items-center gap-2.5 text-sm font-semibold text-slate-700 transition-colors hover:text-clinical-700"
@@ -94,15 +94,16 @@ export function AppHome() {
             </div>
           </div>
 
-          {/* Narrow reserved cell keeps the text column safe; the pure mascot
-              overflows this cell freely and breaks past the card edges. */}
-          <div className="relative z-0 w-12 self-stretch sm:w-20 lg:w-32">
+          {/* Portrait: mascot keeps its own column (no overlap with the text).
+              From sm up there is room to spare, so it grows huge and breaks
+              freely past the card edges. Always click-through + behind text. */}
+          <div className="relative z-0 w-28 self-stretch sm:w-20 lg:w-32">
             <div className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 sm:-right-3 lg:-right-6">
               <DentRayMascot
                 animated
                 priority
                 size="lg"
-                sizeClassName="h-80 w-56 sm:h-[23rem] sm:w-[17rem] lg:h-[31rem] lg:w-[23rem]"
+                sizeClassName="h-40 w-28 sm:h-[23rem] sm:w-[17rem] lg:h-[31rem] lg:w-[23rem]"
               />
             </div>
           </div>

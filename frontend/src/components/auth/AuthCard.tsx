@@ -6,7 +6,7 @@ import { FormEvent, useState } from "react";
 
 import { sendPasswordReset, signInWithEmail, signUpWithEmail } from "@/lib/auth";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
-import { MascotCard } from "@/components/mascot/MascotCard";
+import { DentRayMascot } from "@/components/mascot/DentRayMascot";
 import { BrandLogo } from "@/components/shared/BrandLogo";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -20,7 +20,7 @@ type AuthCardProps = {
 const content = {
   login: {
     title: "Masuk",
-    subtitle: "Lanjutkan skrining Anda.",
+    subtitle: "Lanjutkan menjaga senyum Anda.",
     button: "Masuk",
     footer: "Belum punya akun?",
     footerLink: "/signup",
@@ -28,7 +28,7 @@ const content = {
   },
   signup: {
     title: "Daftar",
-    subtitle: "Simpan riwayat skrining.",
+    subtitle: "Simpan setiap hasil skrining Anda.",
     button: "Daftar",
     footer: "Sudah punya akun?",
     footerLink: "/login",
@@ -90,14 +90,16 @@ export function AuthCard({ mode }: AuthCardProps) {
 
   return (
     <Card className="mx-auto grid w-full max-w-4xl gap-6 rounded-[2rem] p-4 md:grid-cols-[0.9fr_1.1fr] md:p-5">
-      <div className="relative min-h-72 overflow-hidden rounded-[1.7rem] border border-slate-200 bg-gradient-to-br from-white via-clinical-50 to-blue-50 p-5">
+      <div className="relative min-h-72 overflow-hidden rounded-[1.7rem] bg-slate-50/80 p-5">
         <div className="relative z-10 flex h-full flex-col justify-between">
           <div>
             <BrandLogo showText size="sm" />
             <h1 className="mt-3 text-3xl font-bold tracking-[-0.04em] text-slate-950">{active.title}</h1>
             <p className="mt-3 text-sm leading-6 text-slate-600">{active.subtitle}</p>
           </div>
-          <MascotCard className="mt-5 min-h-[180px]" variant="compact" />
+          <div className="mt-5 flex items-end justify-center">
+            <DentRayMascot animated priority size="lg" sizeClassName="h-40 w-28" />
+          </div>
         </div>
       </div>
 

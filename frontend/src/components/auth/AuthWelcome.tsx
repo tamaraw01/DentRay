@@ -92,15 +92,11 @@ export function AuthWelcome() {
     <section className="relative min-h-screen overflow-hidden bg-[#eef2f8] px-3 py-3 text-slate-950 sm:px-5 sm:py-5">
       <div className="relative mx-auto h-[calc(100svh-1.5rem)] max-h-[880px] min-h-[680px] max-w-[520px] overflow-hidden rounded-[2.2rem] bg-white shadow-[0_8px_40px_rgba(15,23,42,0.08),0_2px_12px_rgba(15,23,42,0.05)] sm:h-[calc(100svh-2.5rem)]">
         <div
-          className={`absolute right-[-7%] top-[7%] z-[2] flex h-[44%] w-[74%] items-center justify-center rounded-[42%_0_0_42%] bg-[linear-gradient(145deg,rgba(255,255,255,0.94),rgba(226,241,255,0.82))] shadow-[0_18px_50px_rgba(37,99,235,0.08)] transition duration-300 sm:right-[-3%] ${
+          className={`absolute right-[-7%] top-[7%] z-[2] flex h-[44%] w-[74%] items-center justify-center transition duration-300 sm:right-[-3%] ${
             isSheetOpen ? "translate-x-8 opacity-0" : "translate-x-0 opacity-100"
           }`}
         >
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[conic-gradient(from_130deg,#7dd3fc,#a5b4fc,#f0abfc,#fde68a,#86efac,#7dd3fc)] opacity-45 blur-2xl"
-          />
-          <DentRayMascot animated className="relative z-10 max-h-full max-w-full" priority size="hero" />
+          <DentRayMascot animated className="max-h-full max-w-full" priority size="hero" />
         </div>
 
         <div className="relative z-10 flex h-full flex-col px-6 pb-6 pt-7">

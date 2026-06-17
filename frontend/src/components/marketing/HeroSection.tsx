@@ -1,11 +1,10 @@
-import { MascotCard } from "@/components/mascot/MascotCard";
+import { DentRayMascot } from "@/components/mascot/DentRayMascot";
 import { BrandLogo } from "@/components/shared/BrandLogo";
 import { LinkButton } from "@/components/ui/Button";
 
 export function HeroSection() {
   return (
     <section className="relative flex min-h-screen overflow-hidden px-4 py-5 sm:px-6 lg:px-8">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_66%_28%,rgba(11,124,255,0.16),transparent_24rem),radial-gradient(circle_at_28%_76%,rgba(22,212,255,0.12),transparent_20rem)]" />
       <div className="mx-auto flex w-full max-w-7xl flex-col">
         <header className="relative z-10 flex items-center justify-between">
           <BrandLogo showText size="md" />
@@ -27,8 +26,13 @@ export function HeroSection() {
           </div>
 
           <div className="order-1 lg:order-2">
-            <div className="relative mx-auto w-full max-w-[660px]">
-              <MascotCard animated className="relative z-10 min-h-[360px]" priority variant="floating" />
+            <div className="relative mx-auto flex w-full max-w-[660px] items-center justify-center">
+              <DentRayMascot
+                animated
+                priority
+                size="hero"
+                sizeClassName="h-[min(56svh,30rem)] w-[min(80vw,24rem)]"
+              />
             </div>
           </div>
         </div>

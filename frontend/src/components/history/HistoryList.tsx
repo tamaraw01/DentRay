@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useDentRayUser } from "@/components/app/AppShell";
-import { MascotShowcase } from "@/components/mascot/MascotShowcase";
+import { DentRayMascot } from "@/components/mascot/DentRayMascot";
 import { Glyph } from "@/components/ui/Glyph";
 import { IconBadge } from "@/components/ui/IconBadge";
 import { listScanSessions } from "@/lib/scan-storage";
@@ -34,7 +34,7 @@ export function HistoryList() {
 
       {sessions.length === 0 ? (
         <div className="glass-card flex items-center gap-4 rounded-[1.75rem] p-5">
-          <MascotShowcase className="shrink-0" sizeClassName="h-24 w-[4.5rem]" />
+          <DentRayMascot animated className="shrink-0" size="lg" sizeClassName="h-24 w-[4.5rem]" />
           <div>
             <h2 className="text-base font-bold text-slate-900">Belum ada riwayat.</h2>
             <p className="mt-1.5 text-sm leading-6 text-slate-500">Skrining pertama Anda akan tampil di sini.</p>
