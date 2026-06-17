@@ -1,117 +1,175 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useDentRayUser } from "@/components/app/AppShell";
 import { DentRayMascot } from "@/components/mascot/DentRayMascot";
+import { Glyph } from "@/components/ui/Glyph";
+import { IconBadge, type BadgeTone } from "@/components/ui/IconBadge";
 import { listScanSessions } from "@/lib/scan-storage";
 import type { ScanSessionSummary } from "@/types/scan";
-import { Card } from "@/components/ui/Card";
-import { LinkButton } from "@/components/ui/Button";
 
-const informationLinks = [
-  { href: "/how-it-works", label: "Cara kerja" },
-  { href: "/about", label: "Tentang" },
-  { href: "/disclaimer", label: "Catatan" }
+const actionLinks = [
+  { href: "/app/scan", label: "Mulai Skrining", icon: "scan", tone: "blue" },
+  { href: "/app/history", label: "Lihat Riwayat", icon: "history", tone: "green" },
+  { href: "/how-it-works", label: "Cara Kerja", icon: "info", tone: "amber" },
+  { href: "/app/profile", label: "Profil Saya", icon: "profile", tone: "violet" }
 ] as const;
 
 export function AppHome() {
   const user = useDentRayUser();
-  const [latest, setLatest] = useState<ScanSessionSummary | null>(null);
+  const [sessions, setSessions] = useState<ScanSessionSummary[]>([]);
 
   useEffect(() => {
-    void listScanSessions(user).then((sessions) => setLatest(sessions[0] ?? null)).catch(() => setLatest(null));
+    void listScanSessions(user)
+      .then(setSessions)
+      .catch(() => setSessions([]));
   }, [user]);
 
   const firstName = user.fullName?.split(" ")[0] || user.email?.split("@")[0] || "Pengguna";
 
+  const stats = useMemo(() => {
+    const totalImages = sessions.reduce((sum, session) => sum + (session.total_images ?? 0), 0);
+    const latest = sessions[0] ?? null;
+    return [
+      {
+        icon: "scan",
+        tone: "blue" as BadgeTone,
+        label: "Total Skrining",
+        value: String(sessions.length)
+      },
+      {
+        icon: "photo",
+        tone: "green" as BadgeTone,
+        label: "Foto Teranalisis",
+        value: String(totalImages)
+      },
+      {
+        icon: "calendar",
+        tone: "amber" as BadgeTone,
+        label: "Skrining Terakhir",
+        value: latest
+          ? new Date(latest.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short" })
+          : "–"
+      },
+      {
+        icon: "shield",
+        tone: "red" as BadgeTone,
+        label: "Status Akun",
+        value: "Aktif"
+      }
+    ] as const;
+  }, [sessions]);
+
+  const recent = sessions.slice(0, 3);
+
   return (
     <div className="space-y-4">
-      {/* Hero greeting card */}
-      <section className="glass-card overflow-hidden rounded-[2rem] p-6 sm:p-7">
-        <div className="grid grid-cols-[1fr_auto] items-center gap-4 sm:gap-6">
-          <div>
-            <p className="text-[0.7rem] font-bold uppercase tracking-[0.15em] text-clinical-600">
-              Selamat datang
-            </p>
-            <h1 className="mt-2 text-[2.2rem] font-bold leading-[1.1] tracking-[-0.04em] text-slate-950 sm:text-[2.8rem]">
+      {/* Greeting card */}
+      <section className="glass-card relative overflow-hidden rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8">
+        <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-[1fr_auto]">
+          <div className="relative z-10 max-w-md">
+            <h1 className="text-[2.1rem] font-bold leading-[1.05] tracking-[-0.045em] text-slate-950 sm:text-[2.7rem]">
               Halo, {firstName}!
             </h1>
-            <p className="mt-2.5 text-sm leading-relaxed text-slate-500">
-              Satu foto yang jelas sudah cukup.
+            <p className="mt-2.5 text-sm text-slate-500 sm:text-base">
+              Apa yang ingin Anda lakukan hari ini?
             </p>
-            <div className="mt-5 flex flex-wrap gap-3">
-              <LinkButton href="/app/scan">Mulai Skrining</LinkButton>
-              <LinkButton href="/app/history" variant="secondary">Riwayat</LinkButton>
+
+            <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4">
+              {actionLinks.map((item) => (
+                <Link
+                  className="group flex items-center gap-2.5 text-sm font-semibold text-slate-700 transition-colors hover:text-clinical-700"
+                  href={item.href}
+                  key={item.href}
+                >
+                  <IconBadge size="sm" tone={item.tone}>
+                    <Glyph name={item.icon} />
+                  </IconBadge>
+                  <span className="leading-tight">{item.label}</span>
+                </Link>
+              ))}
             </div>
-            <p className="mt-4 text-xs text-slate-400">Bukan diagnosis klinis.</p>
           </div>
+
           <DentRayMascot
             animated
-            className="sm:h-64 sm:w-48"
+            className="mx-auto -mb-2 -mr-2 hidden sm:block sm:h-60 sm:w-44 lg:h-64 lg:w-48"
             priority
             size="md"
           />
         </div>
+
+        <DentRayMascot
+          animated
+          className="pointer-events-none absolute -right-6 -top-2 h-40 w-28 opacity-90 sm:hidden"
+          priority
+          size="md"
+        />
       </section>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <Card className="p-4 sm:p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.75rem] bg-blue-50 text-clinical-600">
-              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
-                <rect height="14" rx="2" stroke="currentColor" strokeWidth="2" width="16" x="4" y="4" />
-                <path d="M8 2v2M16 2v2M4 9h16" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-              </svg>
-            </div>
-            <div className="min-w-0">
-              <p className="text-[0.68rem] text-slate-500">Skrining Terakhir</p>
-              <p className="mt-0.5 truncate text-sm font-bold text-slate-900">
-                {latest
-                  ? new Date(latest.created_at).toLocaleDateString("id-ID", { day: "numeric", month: "short" })
-                  : "–"}
-              </p>
-            </div>
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+        {stats.map((stat) => (
+          <div className="glass-card rounded-[1.5rem] p-4 sm:p-5" key={stat.label}>
+            <IconBadge tone={stat.tone}>
+              <Glyph name={stat.icon} />
+            </IconBadge>
+            <p className="mt-3.5 text-xs leading-snug text-slate-500">{stat.label}</p>
+            <p className="mt-1 text-2xl font-bold tracking-[-0.03em] text-slate-900">{stat.value}</p>
           </div>
-        </Card>
-
-        <Card className="p-4 sm:p-5">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[0.75rem] bg-emerald-50 text-emerald-600">
-              <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
-                <path d="M4 8h16M4 16h16" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-                <path d="M8 4v4M12 4v4M16 4v4" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />
-              </svg>
-            </div>
-            <div className="min-w-0">
-              <p className="text-[0.68rem] text-slate-500">Foto Teranalisis</p>
-              <p className="mt-0.5 text-sm font-bold text-slate-900">
-                {latest?.total_images != null ? `${latest.total_images} foto` : "–"}
-              </p>
-            </div>
-          </div>
-        </Card>
+        ))}
       </div>
 
-      {/* Info links */}
-      <Card className="p-4 sm:p-5">
-        <p className="text-[0.68rem] font-bold uppercase tracking-[0.12em] text-slate-400">
-          Pelajari
-        </p>
-        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
-          {informationLinks.map((item) => (
-            <Link
-              className="text-sm font-semibold text-clinical-700 hover:text-clinical-600"
-              href={item.href}
-              key={item.href}
-            >
-              {item.label}
+      {/* Recent activity */}
+      <section className="glass-card rounded-[1.75rem] p-5 sm:p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-bold text-slate-900">Aktivitas Terakhir</h2>
+          {recent.length > 0 && (
+            <Link className="text-xs font-semibold text-clinical-700 hover:text-clinical-600" href="/app/history">
+              Lihat semua
             </Link>
-          ))}
+          )}
         </div>
-      </Card>
+
+        {recent.length === 0 ? (
+          <p className="mt-4 text-sm text-slate-500">
+            Belum ada skrining.{" "}
+            <Link className="font-semibold text-clinical-700" href="/app/scan">
+              Mulai sekarang
+            </Link>
+            .
+          </p>
+        ) : (
+          <ul className="mt-4 space-y-2.5">
+            {recent.map((session) => (
+              <li key={session.id}>
+                <Link
+                  className="flex items-center gap-3 rounded-[1.1rem] bg-slate-50/70 p-3 transition-colors hover:bg-slate-100/80"
+                  href={`/app/history/${session.id}`}
+                >
+                  <IconBadge tone="blue">
+                    <Glyph name="scan" />
+                  </IconBadge>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-semibold text-slate-800">Sesi Skrining</p>
+                    <p className="truncate text-xs text-slate-500">
+                      {new Date(session.created_at).toLocaleDateString("id-ID", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                      })}{" "}
+                      · {session.total_images} foto
+                    </p>
+                  </div>
+                  <Glyph className="h-4 w-4 shrink-0 text-slate-300" name="arrow" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </div>
   );
 }

@@ -10,6 +10,8 @@ import { DentRayLoading } from "@/components/loading/DentRayLoading";
 import { ResultDashboard } from "@/components/result/ResultDashboard";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { Glyph } from "@/components/ui/Glyph";
+import { IconBadge } from "@/components/ui/IconBadge";
 import { ImageUpload } from "@/components/upload/ImageUpload";
 import { useImageQuality } from "@/hooks/useImageQuality";
 import { predictImage } from "@/lib/api";
@@ -132,19 +134,16 @@ export function SingleImageScan() {
 
   return (
     <div className="space-y-5">
-      <Card className="overflow-hidden rounded-[1.9rem] p-5 sm:p-7">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Skrining Visual</p>
-            <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">Skrining Gigi</h1>
-            <p className="mt-3 text-sm leading-6 text-slate-600">Satu foto yang jelas sudah cukup.</p>
-          </div>
-          <span className="rounded-full border border-clinical-100 bg-clinical-50 px-3 py-1 text-xs font-bold text-clinical-700">AI</span>
+      <header className="flex items-center justify-between gap-4 px-1">
+        <div>
+          <h1 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 sm:text-[1.7rem]">Skrining Gigi</h1>
+          <p className="mt-1 text-sm text-slate-500">Satu foto yang jelas sudah cukup.</p>
         </div>
-      </Card>
+        <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-clinical-700">AI</span>
+      </header>
 
       {!result && (
-        <Card className="rounded-[1.9rem]">
+        <Card className="rounded-[1.75rem]">
           {pendingImage ? (
             <ImageAdjuster
               imageSrc={pendingImage.previewUrl}
@@ -159,10 +158,10 @@ export function SingleImageScan() {
                   return (
                     <button
                       aria-pressed={isActive}
-                      className={`rounded-[1.35rem] border p-4 text-left transition hover:-translate-y-0.5 ${
+                      className={`flex items-center gap-3 rounded-[1.25rem] p-4 text-left transition-all ${
                         isActive
-                          ? "border-clinical-200 bg-white text-slate-950 shadow-[0_12px_30px_rgba(37,99,235,0.10)]"
-                          : "border-slate-200 bg-slate-50/80 text-slate-600 hover:bg-white"
+                          ? "bg-blue-50/70 text-slate-950 ring-2 ring-clinical-500/60"
+                          : "bg-slate-50 text-slate-600 hover:bg-slate-100/80"
                       }`}
                       key={option.id}
                       onClick={() => {
@@ -171,8 +170,13 @@ export function SingleImageScan() {
                       }}
                       type="button"
                     >
-                      <span className="text-base font-extrabold">{option.title}</span>
-                      <span className="mt-1 block text-sm leading-6">{option.body}</span>
+                      <IconBadge tone={option.id === "camera" ? "blue" : "green"}>
+                        <Glyph name={option.id === "camera" ? "scan" : "photo"} />
+                      </IconBadge>
+                      <span className="min-w-0">
+                        <span className="block text-sm font-bold">{option.title}</span>
+                        <span className="mt-0.5 block text-xs leading-5 text-slate-500">{option.body}</span>
+                      </span>
                     </button>
                   );
                 })}

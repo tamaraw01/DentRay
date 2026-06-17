@@ -42,18 +42,23 @@ export function HistoryDetail({ id }: HistoryDetailProps) {
 
   return (
     <div className="space-y-5">
-      <Card>
-        <div className="relative z-10">
-          <p className="text-sm text-slate-500">{new Date(session.created_at).toLocaleString("id-ID")}</p>
-          <p className="mt-3 text-xs font-bold uppercase tracking-[0.16em] text-clinical-600">Detail Skrining</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-slate-950">Sesi Skrining</h1>
-          <p className="mt-3 text-sm leading-6 text-slate-600">{session.total_images} foto dianalisis.</p>
-        </div>
-      </Card>
+      <header className="px-1">
+        <h1 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 sm:text-[1.7rem]">Sesi Skrining</h1>
+        <p className="mt-1 text-sm text-slate-500">
+          {new Date(session.created_at).toLocaleString("id-ID", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          })}{" "}
+          · {session.total_images} foto
+        </p>
+      </header>
 
       {results.map((result) => (
         <Card key={result.id}>
-          <h2 className="text-xl font-extrabold text-slate-950">Hasil Overlay</h2>
+          <h2 className="text-lg font-bold text-slate-900">Hasil Overlay</h2>
           <p className="mt-2 text-sm leading-6 text-slate-600">Area terdeteksi ditandai overlay.</p>
           <div className="mt-4 rounded-[1.35rem] border border-clinical-200 bg-white p-3 shadow-[0_16px_38px_rgba(37,99,235,0.08)]">
             {result.overlay_image_url ? (
