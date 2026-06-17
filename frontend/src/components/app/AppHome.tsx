@@ -68,9 +68,9 @@ export function AppHome() {
     <div className="space-y-4">
       {/* Greeting card */}
       <section className="glass-card relative overflow-hidden rounded-[2rem] px-5 py-6 sm:px-8 sm:py-8">
-        <div className="grid grid-cols-[1fr_auto] items-center gap-3 sm:gap-6">
+        <div className="grid grid-cols-[1fr_auto] items-center gap-2 sm:gap-6">
           <div className="relative z-10 max-w-md">
-            <h1 className="text-[1.9rem] font-bold leading-[1.05] tracking-[-0.045em] text-slate-950 sm:text-[2.7rem]">
+            <h1 className="text-[1.8rem] font-bold leading-[1.05] tracking-[-0.045em] text-slate-950 sm:text-[2.7rem]">
               Halo, {firstName}!
             </h1>
             <p className="mt-2 text-sm text-slate-500 sm:text-base">
@@ -94,9 +94,9 @@ export function AppHome() {
           </div>
 
           <MascotShowcase
-            className="-mr-2 sm:mr-0"
+            className="-mr-3 sm:mr-0"
             priority
-            sizeClassName="h-40 w-28 sm:h-56 sm:w-40 lg:h-[17rem] lg:w-52"
+            sizeClassName="h-44 w-32 sm:h-64 sm:w-48 lg:h-[20rem] lg:w-60"
           />
         </div>
       </section>
