@@ -43,13 +43,13 @@ function useUrlAuthMode() {
 function sheetContent(mode: AuthMode) {
   if (mode === "signup") {
     return {
-      subtitle: "Simpan riwayat skrining Anda.",
+      subtitle: "Simpan setiap hasil skrining Anda.",
       title: "Buat Akun"
     };
   }
 
   return {
-    subtitle: "Lanjutkan skrining Anda.",
+    subtitle: "Lanjutkan menjaga senyum Anda.",
     title: "Masuk"
   };
 }
@@ -96,7 +96,11 @@ export function AuthWelcome() {
             isSheetOpen ? "translate-x-8 opacity-0" : "translate-x-0 opacity-100"
           }`}
         >
-          <DentRayMascot animated className="max-h-full max-w-full" priority size="hero" />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[conic-gradient(from_130deg,#7dd3fc,#a5b4fc,#f0abfc,#fde68a,#86efac,#7dd3fc)] opacity-45 blur-2xl"
+          />
+          <DentRayMascot animated className="relative z-10 max-h-full max-w-full" priority size="hero" />
         </div>
 
         <div className="relative z-10 flex h-full flex-col px-6 pb-6 pt-7">
@@ -107,10 +111,10 @@ export function AuthWelcome() {
           <div className="flex flex-1 flex-col justify-end pb-28">
             <div className={`max-w-[17rem] transition duration-300 ${isSheetOpen ? "-translate-y-6 opacity-55" : "translate-y-0 opacity-100"}`}>
               <h1 className="text-[3.05rem] font-bold leading-[1] tracking-[-0.055em] text-slate-950">
-                Skrining awal, dari satu foto.
+                Deteksi dini, senyum terjaga.
               </h1>
-              <p className="mt-4 text-base font-medium leading-7 text-slate-600">Analisis visual area gigi dari satu foto.</p>
-              <p className="mt-3 text-sm font-semibold text-slate-500">Bukan pengganti dokter gigi.</p>
+              <p className="mt-4 text-base font-medium leading-7 text-slate-600">Skrining visual gigi berbasis AI, cukup dari satu foto.</p>
+              <p className="mt-3 text-sm font-semibold text-slate-500">Skrining awal, bukan pengganti dokter gigi.</p>
             </div>
           </div>
         </div>

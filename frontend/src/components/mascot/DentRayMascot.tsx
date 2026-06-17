@@ -7,6 +7,7 @@ type DentRayMascotProps = {
   className?: string;
   priority?: boolean;
   size?: "sm" | "md" | "lg" | "hero";
+  sizeClassName?: string;
 };
 
 const sizeClasses = {
@@ -27,14 +28,15 @@ export function DentRayMascot({
   animated = false,
   className,
   priority = false,
-  size = "md"
+  size = "md",
+  sizeClassName
 }: DentRayMascotProps) {
   return (
     <div
       aria-hidden="true"
       className={cn(
         "relative shrink-0",
-        sizeClasses[size],
+        sizeClassName ?? sizeClasses[size],
         animated && "dentray-mascot-float",
         className
       )}

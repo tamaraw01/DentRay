@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import { useDentRayUser } from "@/components/app/AppShell";
-import { DentRayMascot } from "@/components/mascot/DentRayMascot";
+import { MascotShowcase } from "@/components/mascot/MascotShowcase";
 import { Glyph } from "@/components/ui/Glyph";
 import { IconBadge, type BadgeTone } from "@/components/ui/IconBadge";
 import { listScanSessions } from "@/lib/scan-storage";
@@ -42,7 +42,7 @@ export function AppHome() {
       {
         icon: "photo",
         tone: "green" as BadgeTone,
-        label: "Foto Teranalisis",
+        label: "Foto Dianalisis",
         value: String(totalImages)
       },
       {
@@ -67,17 +67,17 @@ export function AppHome() {
   return (
     <div className="space-y-4">
       {/* Greeting card */}
-      <section className="glass-card relative overflow-hidden rounded-[2rem] px-6 py-7 sm:px-8 sm:py-8">
-        <div className="grid grid-cols-1 items-center gap-2 sm:grid-cols-[1fr_auto]">
+      <section className="glass-card relative overflow-hidden rounded-[2rem] px-5 py-6 sm:px-8 sm:py-8">
+        <div className="grid grid-cols-[1fr_auto] items-center gap-3 sm:gap-6">
           <div className="relative z-10 max-w-md">
-            <h1 className="text-[2.1rem] font-bold leading-[1.05] tracking-[-0.045em] text-slate-950 sm:text-[2.7rem]">
+            <h1 className="text-[1.9rem] font-bold leading-[1.05] tracking-[-0.045em] text-slate-950 sm:text-[2.7rem]">
               Halo, {firstName}!
             </h1>
-            <p className="mt-2.5 text-sm text-slate-500 sm:text-base">
-              Apa yang ingin Anda lakukan hari ini?
+            <p className="mt-2 text-sm text-slate-500 sm:text-base">
+              Mari jaga senyum Anda hari ini.
             </p>
 
-            <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-4">
+            <div className="mt-5 grid grid-cols-1 gap-x-6 gap-y-3.5 min-[420px]:grid-cols-2 sm:mt-6">
               {actionLinks.map((item) => (
                 <Link
                   className="group flex items-center gap-2.5 text-sm font-semibold text-slate-700 transition-colors hover:text-clinical-700"
@@ -93,20 +93,8 @@ export function AppHome() {
             </div>
           </div>
 
-          <DentRayMascot
-            animated
-            className="mx-auto -mb-2 -mr-2 hidden sm:block sm:h-60 sm:w-44 lg:h-64 lg:w-48"
-            priority
-            size="md"
-          />
+          <MascotShowcase className="-mr-1 sm:mr-0" priority />
         </div>
-
-        <DentRayMascot
-          animated
-          className="pointer-events-none absolute -right-6 -top-2 h-40 w-28 opacity-90 sm:hidden"
-          priority
-          size="md"
-        />
       </section>
 
       {/* Stat cards */}
@@ -137,7 +125,7 @@ export function AppHome() {
           <p className="mt-4 text-sm text-slate-500">
             Belum ada skrining.{" "}
             <Link className="font-semibold text-clinical-700" href="/app/scan">
-              Mulai sekarang
+              Mulai yang pertama
             </Link>
             .
           </p>

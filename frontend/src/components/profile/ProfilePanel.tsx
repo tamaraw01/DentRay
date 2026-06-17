@@ -30,7 +30,7 @@ export function ProfilePanel() {
     const totalImages = sessions.reduce((sum, session) => sum + (session.total_images ?? 0), 0);
     return [
       { icon: "scan", tone: "blue" as BadgeTone, label: "Total Skrining", value: String(sessions.length) },
-      { icon: "photo", tone: "green" as BadgeTone, label: "Foto Teranalisis", value: String(totalImages) }
+      { icon: "photo", tone: "green" as BadgeTone, label: "Foto Dianalisis", value: String(totalImages) }
     ] as const;
   }, [sessions]);
 
@@ -44,7 +44,7 @@ export function ProfilePanel() {
     <div className="space-y-5">
       <header className="px-1">
         <h1 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 sm:text-[1.7rem]">Profil</h1>
-        <p className="mt-1 text-sm text-slate-500">Akun dan preferensi Anda.</p>
+        <p className="mt-1 text-sm text-slate-500">Akun dan aktivitas Anda.</p>
       </header>
 
       {/* Identity card */}
@@ -79,7 +79,7 @@ export function ProfilePanel() {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold text-slate-900">Pasang Aplikasi</p>
           <p className="mt-0.5 text-xs leading-5 text-slate-500">
-            {isStandalone ? "Aplikasi sudah terpasang." : "Buka lebih cepat dari layar utama."}
+            {isStandalone ? "Aplikasi sudah terpasang." : "Akses DentRay lebih cepat dari layar utama."}
           </p>
         </div>
         <Button
@@ -101,7 +101,7 @@ export function ProfilePanel() {
         <div>
           <p className="text-sm font-bold text-slate-900">Catatan Medis</p>
           <p className="mt-0.5 text-xs leading-5 text-slate-500">
-            Skrining visual awal. Bukan pengganti pemeriksaan dokter gigi.
+            Skrining awal, bukan pengganti dokter gigi.
           </p>
         </div>
       </div>

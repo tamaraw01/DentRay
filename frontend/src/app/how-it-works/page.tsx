@@ -16,8 +16,8 @@ const workflow = [
     body: "AI mendeteksi area yang mencurigakan."
   },
   {
-    title: "Overlay Ditampilkan",
-    body: "Area terdeteksi ditandai overlay merah."
+    title: "Hasil Ditampilkan",
+    body: "Area terindikasi ditandai merah."
   }
 ];
 

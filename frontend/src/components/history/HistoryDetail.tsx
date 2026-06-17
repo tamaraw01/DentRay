@@ -58,8 +58,8 @@ export function HistoryDetail({ id }: HistoryDetailProps) {
 
       {results.map((result) => (
         <Card key={result.id}>
-          <h2 className="text-lg font-bold text-slate-900">Hasil Overlay</h2>
-          <p className="mt-2 text-sm leading-6 text-slate-600">Area terdeteksi ditandai overlay.</p>
+          <h2 className="text-lg font-bold text-slate-900">Hasil Skrining</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-600">Area terindikasi ditandai merah.</p>
           <div className="mt-4 rounded-[1.35rem] border border-clinical-200 bg-white p-3 shadow-[0_16px_38px_rgba(37,99,235,0.08)]">
             {result.overlay_image_url ? (
               <div className="flex max-h-[70svh] items-center justify-center overflow-hidden rounded-xl bg-clinical-50/70 p-2">
@@ -73,7 +73,7 @@ export function HistoryDetail({ id }: HistoryDetailProps) {
         </Card>
       ))}
       <Card className="border-amber-200/70 bg-amber-50/80 shadow-none">
-        <p className="text-sm leading-6 text-amber-900">Skrining visual awal. Bukan pengganti dokter gigi.</p>
+        <p className="text-sm leading-6 text-amber-900">Skrining awal, bukan pengganti dokter gigi.</p>
       </Card>
     </div>
   );

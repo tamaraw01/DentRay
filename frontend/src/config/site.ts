@@ -3,7 +3,7 @@ import { brandConfig } from "@/config/brand";
 export const siteConfig = {
   name: brandConfig.appName,
   tagline: brandConfig.tagline,
-  description: "Skrining visual gigi berbasis AI dari satu foto.",
+  description: "Skrining visual gigi berbasis AI, cukup dari satu foto.",
   configuredApiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "",
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000",
   aiBackendUrl: process.env.NEXT_PUBLIC_AI_BACKEND_URL ?? "",

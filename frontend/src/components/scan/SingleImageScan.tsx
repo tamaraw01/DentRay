@@ -137,7 +137,7 @@ export function SingleImageScan() {
       <header className="flex items-center justify-between gap-4 px-1">
         <div>
           <h1 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 sm:text-[1.7rem]">Skrining Gigi</h1>
-          <p className="mt-1 text-sm text-slate-500">Satu foto yang jelas sudah cukup.</p>
+          <p className="mt-1 text-sm text-slate-500">Cukup satu foto gigi yang jelas.</p>
         </div>
         <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-clinical-700">AI</span>
       </header>
@@ -202,7 +202,7 @@ export function SingleImageScan() {
                 <div>
                   <p className="text-xs font-bold uppercase tracking-[0.14em] text-clinical-600">Tinjau Foto</p>
                   <h2 className="mt-2 text-2xl font-bold tracking-[-0.03em] text-slate-950">Foto Siap Dianalisis</h2>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi terlihat jelas.</p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">Pastikan gigi tampak jelas dan cukup terang.</p>
                   <ImageQualityNotice
                     error={qualityError}
                     isChecking={isCheckingQuality}

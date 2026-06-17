@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { useDentRayUser } from "@/components/app/AppShell";
-import { DentRayMascot } from "@/components/mascot/DentRayMascot";
+import { MascotShowcase } from "@/components/mascot/MascotShowcase";
 import { Glyph } from "@/components/ui/Glyph";
 import { IconBadge } from "@/components/ui/IconBadge";
 import { listScanSessions } from "@/lib/scan-storage";
@@ -27,19 +27,17 @@ export function HistoryList() {
     <div className="space-y-5">
       <header className="px-1">
         <h1 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 sm:text-[1.7rem]">Riwayat Skrining</h1>
-        <p className="mt-1 text-sm text-slate-500">Semua sesi skrining Anda.</p>
+        <p className="mt-1 text-sm text-slate-500">Semua sesi skrining tersimpan di sini.</p>
       </header>
 
       {error && <p className="rounded-2xl bg-rose-50 p-3 text-sm text-rose-700">{error}</p>}
 
       {sessions.length === 0 ? (
-        <div className="glass-card flex items-center gap-5 rounded-[1.75rem] p-5">
-          <div className="flex h-24 w-20 shrink-0 items-center justify-center rounded-[1.4rem] bg-blue-50">
-            <DentRayMascot size="sm" />
-          </div>
+        <div className="glass-card flex items-center gap-4 rounded-[1.75rem] p-5">
+          <MascotShowcase className="shrink-0" sizeClassName="h-24 w-[4.5rem]" />
           <div>
             <h2 className="text-base font-bold text-slate-900">Belum ada riwayat.</h2>
-            <p className="mt-1.5 text-sm leading-6 text-slate-500">Mulai skrining pertama untuk menyimpannya di sini.</p>
+            <p className="mt-1.5 text-sm leading-6 text-slate-500">Skrining pertama Anda akan tampil di sini.</p>
             <Link
               className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-clinical-700 hover:text-clinical-600"
               href="/app/scan"

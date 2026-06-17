@@ -21,13 +21,13 @@ function downloadDataUrl(dataUrl: string, filename: string) {
 export function ResultDashboard({ result, onReset }: ResultDashboardProps) {
   const disclaimer =
     result.disclaimer ??
-    "Skrining visual awal. Bukan pengganti dokter gigi.";
+    "Skrining awal, bukan pengganti dokter gigi.";
 
   return (
     <section className="space-y-5">
       <div>
-        <h2 className="text-3xl font-bold tracking-[-0.04em] text-slate-950">Hasil Analisis</h2>
-        <p className="mt-2 text-sm leading-6 text-slate-600">Area terdeteksi ditandai merah.</p>
+        <h2 className="text-3xl font-bold tracking-[-0.04em] text-slate-950">Hasil Skrining</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Area terindikasi ditandai merah.</p>
       </div>
       <ResultImageGrid result={result} />
       <div className="rounded-[1.4rem] border border-amber-200/70 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-950">
@@ -38,7 +38,7 @@ export function ResultDashboard({ result, onReset }: ResultDashboardProps) {
           Skrining Ulang
         </Button>
         <Button onClick={() => downloadDataUrl(result.overlay, "dentray-overlay.png")} type="button">
-          Unduh Overlay
+          Unduh Hasil
         </Button>
       </div>
     </section>
