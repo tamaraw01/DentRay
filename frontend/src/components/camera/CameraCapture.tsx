@@ -73,7 +73,8 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
   const [state, setState] = useState<CameraState>("idle");
   const [error, setError] = useState("");
   const [facingMode, setFacingMode] = useState<FacingMode>("user");
-  const [cameraCount, setCameraCount] = useState(1);
+  const [torchSupported, setTorchSupported] = useState(false);
+  const [torchOn, setTorchOn] = useState(false);
 
   const stopCamera = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop());
@@ -147,12 +148,10 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
         await videoRef.current.play();
       }
 
-      try {
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        setCameraCount(devices.filter((device) => device.kind === "videoinput").length);
-      } catch {
-        setCameraCount(1);
-      }
+      const videoTrack = stream.getVideoTracks()[0];
+      const capabilities = videoTrack?.getCapabilities?.() as { torch?: boolean } | undefined;
+      setTorchSupported(Boolean(capabilities?.torch));
+      setTorchOn(false);
 
       setState("ready");
     } catch (cameraError) {
@@ -293,6 +292,22 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
     void startCamera(nextMode);
   };
 
+  const toggleTorch = async () => {
+    const track = streamRef.current?.getVideoTracks()[0];
+    if (!track) {
+      return;
+    }
+    const nextTorch = !torchOn;
+    try {
+      await track.applyConstraints({
+        advanced: [{ torch: nextTorch }]
+      } as unknown as MediaTrackConstraints);
+      setTorchOn(nextTorch);
+    } catch {
+      setError("Flash tidak dapat diaktifkan pada kamera ini.");
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div>
@@ -315,15 +330,34 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
             ref={videoRef}
           />
           {state === "ready" && (
-            <button
-              aria-label="Kamera Lain"
-              className="absolute right-3 top-3 rounded-full border border-white/80 bg-white/95 px-3 py-2 text-xs font-bold text-slate-700 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500"
-              onClick={switchCamera}
-              title={cameraCount > 1 ? "Kamera Lain" : "Coba Kamera Lain"}
-              type="button"
-            >
-              Kamera Lain
-            </button>
+            <div className="absolute right-3 top-3 flex flex-col gap-2">
+              {torchSupported && (
+                <button
+                  aria-label={torchOn ? "Matikan flash" : "Nyalakan flash"}
+                  aria-pressed={torchOn}
+                  className={cn(
+                    "flex h-11 w-11 items-center justify-center rounded-full border shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500",
+                    torchOn
+                      ? "border-amber-300 bg-amber-400 text-white"
+                      : "border-white/80 bg-white/95 text-slate-700 hover:bg-white"
+                  )}
+                  onClick={toggleTorch}
+                  title={torchOn ? "Matikan flash" : "Nyalakan flash"}
+                  type="button"
+                >
+                  <FlashIcon on={torchOn} />
+                </button>
+              )}
+              <button
+                aria-label="Tukar kamera"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/80 bg-white/95 text-slate-700 shadow-sm transition hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-clinical-500"
+                onClick={switchCamera}
+                title="Tukar kamera"
+                type="button"
+              >
+                <SwapCameraIcon />
+              </button>
+            </div>
           )}
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div
@@ -345,20 +379,36 @@ export function CameraCapture({ disabled = false, onPhotoSelected, onUploadReque
 
       {error && <p className="rounded-2xl bg-red-50 p-3 text-sm leading-6 text-red-700">{error}</p>}
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className={cn("grid gap-3", onUploadRequested ? "sm:grid-cols-2" : "")}>
         <Button disabled={disabled || state !== "ready"} onClick={capturePhoto} type="button">
           Ambil Foto
         </Button>
-        <Button disabled={disabled || state === "starting"} onClick={switchCamera} type="button" variant="secondary">
-          Kamera Lain
-        </Button>
         {onUploadRequested && (
-          <Button disabled={disabled} onClick={onUploadRequested} type="button" variant="ghost">
+          <Button disabled={disabled} onClick={onUploadRequested} type="button" variant="secondary">
             Unggah Foto
           </Button>
         )}
       </div>
       <canvas className="hidden" ref={canvasRef} />
     </div>
+  );
+}
+
+function SwapCameraIcon() {
+  return (
+    <svg aria-hidden="true" className="h-5 w-5" fill="none" viewBox="0 0 24 24">
+      <path d="M4 9a8 8 0 0 1 13.5-3.5L20 8" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+      <path d="M20 15a8 8 0 0 1-13.5 3.5L4 16" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+      <path d="M20 4v4h-4M4 20v-4h4" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function FlashIcon({ on }: { on: boolean }) {
+  return (
+    <svg aria-hidden="true" className="h-5 w-5" fill={on ? "currentColor" : "none"} viewBox="0 0 24 24">
+      <path d="M13 2 5 13h5l-1 9 9-12h-5l1-8Z" stroke="currentColor" strokeLinejoin="round" strokeWidth="2" />
+      {!on && <path d="m4 4 16 16" stroke="currentColor" strokeLinecap="round" strokeWidth="2" />}
+    </svg>
   );
 }

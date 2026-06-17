@@ -59,7 +59,7 @@ export function AppShell({ children }: AppShellProps) {
   }
 
   return (
-    <div className="min-h-screen px-3 pb-[calc(6.5rem+env(safe-area-inset-bottom))] pt-4 sm:px-5 md:pb-8">
+    <div className="min-h-screen px-3 pb-[calc(5.25rem+env(safe-area-inset-bottom))] pt-4 sm:px-5 md:pb-8">
       <UserContext.Provider value={user}>
         <div className="mx-auto grid max-w-6xl gap-4 sm:gap-5 lg:grid-cols-[76px_minmax(0,1fr)]">
           <aside className="sticky top-5 hidden h-[calc(100vh-2.5rem)] flex-col items-center justify-between rounded-[1.75rem] bg-white px-2.5 py-5 shadow-[0_4px_20px_rgba(15,23,42,0.07)] lg:flex">

@@ -106,7 +106,7 @@ export function ProfilePanel() {
         </div>
       </div>
 
-      <Button className="w-full" onClick={handleLogout} type="button" variant="secondary">
+      <Button className="w-full" onClick={handleLogout} type="button" variant="danger">
         Keluar dari Akun
       </Button>
     </div>
