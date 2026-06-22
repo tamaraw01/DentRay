@@ -26,7 +26,7 @@ function getClient(source: string) {
   if (!cachedClient || cachedClient.source !== normalizedSource) {
     cachedClient = {
       source: normalizedSource,
-      promise: Client.connect(normalizedSource)
+      promise: Client.connect(normalizedSource, { hf_token: "" })
     };
   }
 
