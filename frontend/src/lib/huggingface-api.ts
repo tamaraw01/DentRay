@@ -68,6 +68,10 @@ export async function predictWithHuggingFace(file: File, source: string): Promis
 
     return prediction;
   } catch (error) {
+    // Temporary debug logging to help surface raw Gradio/connection errors in browser console
+    // Remove this after debugging once the issue is resolved.
+    // eslint-disable-next-line no-console
+    console.error("[DentRay] predict error:", error);
     if (error instanceof Error && error.message === "Hasil belum dapat dibaca. Coba lagi.") {
       throw error;
     }

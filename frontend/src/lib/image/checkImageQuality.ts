@@ -8,7 +8,8 @@ import type {
 } from "@/types/image-quality";
 
 const QUALITY_SAMPLE_MAX_SIDE = 320;
-const MIN_SHORT_SIDE = 360;
+// Lowered to 320 to reduce false positives on desktop webcams
+const MIN_SHORT_SIDE = 320;
 const VERY_DARK_THRESHOLD = 25;
 const DARK_THRESHOLD = 55;
 const BRIGHT_THRESHOLD = 225;
