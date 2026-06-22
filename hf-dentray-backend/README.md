@@ -24,8 +24,7 @@ training model.
 app.py
 requirements.txt
 README.md
-models/
-└── dentray_unet_model.keras
+dentray_unet_model.keras
 ```
 
 ## Deploy ke Hugging Face Spaces
@@ -116,3 +115,4 @@ backend utama.
 - Source code dan model pada Space publik dapat dilihat dan di-clone oleh publik.
 - Gambar diproses untuk inference dan tidak disimpan permanen oleh kode DentRay.
 - Hasil merupakan skrining awal dan bukan pengganti pemeriksaan dokter gigi.
+

@@ -8,13 +8,11 @@ import gradio as gr
 import numpy as np
 from PIL import Image
 
-IMAGE_SIZE = (256, 256)
+IMAGE_SIZE = (512, 512)
 MASK_THRESHOLD = 0.5
 OVERLAY_COLOR = (239, 68, 68)
 OVERLAY_ALPHA = 0.42
-MODEL_PATH = (
-    Path(__file__).resolve().parent / "models" / "dentray_unet_model.keras"
-)
+MODEL_PATH = Path(__file__).resolve().parent / "dentray_unet_model.keras"
 
 DISCLAIMER = (
     "Hasil ini adalah skrining awal dan bukan pengganti pemeriksaan dokter gigi."
@@ -26,7 +24,7 @@ def load_dentray_model() -> Any:
     if not MODEL_PATH.exists() or not MODEL_PATH.is_file() or MODEL_PATH.stat().st_size == 0:
         raise FileNotFoundError(
             "Model DentRay belum ditemukan. Letakkan dentray_unet_model.keras "
-            "di models/dentray_unet_model.keras."
+            "sejajar dengan app.py (di root repo)."
         )
 
     from tensorflow.keras.models import load_model
@@ -182,3 +180,4 @@ demo.queue(default_concurrency_limit=1, max_size=8)
 
 if __name__ == "__main__":
     demo.launch(css=SPACE_CSS)
+
