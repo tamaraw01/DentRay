@@ -8,8 +8,8 @@ import type {
 } from "@/types/image-quality";
 
 const QUALITY_SAMPLE_MAX_SIDE = 320;
-// Lowered to 320 to reduce false positives on desktop webcams
-const MIN_SHORT_SIDE = 320;
+// Lowered to 240 to accept good-quality photos even with modest resolution
+const MIN_SHORT_SIDE = 240;
 const VERY_DARK_THRESHOLD = 25;
 const DARK_THRESHOLD = 55;
 const BRIGHT_THRESHOLD = 225;
@@ -134,6 +134,25 @@ export async function checkImageQuality(
         finalIssues.length * 12 -
         uniqueIssues(blockingIssues).length * 18
     )
+  );
+
+  // Temporary debug logging to help diagnose image quality rejections
+  // eslint-disable-next-line no-console
+  console.log(
+    "[DentRay] Image quality check:",
+    {
+      width,
+      height,
+      shortSide: Math.min(width, height),
+      MIN_SHORT_SIDE,
+      brightness: Math.round(brightness * 10) / 10,
+      contrast: Math.round(contrast * 10) / 10,
+      blurScore: Math.round(blurScore * 10) / 10,
+      issues: finalIssues,
+      blockingIssues,
+      score,
+      ok: blockingIssues.length === 0
+    }
   );
 
   return {
