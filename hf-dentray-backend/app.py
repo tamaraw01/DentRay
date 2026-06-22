@@ -7,6 +7,7 @@ from typing import Any
 import gradio as gr
 import numpy as np
 from PIL import Image
+from fastapi.middleware.cors import CORSMiddleware
 
 IMAGE_SIZE = (512, 512)
 MASK_THRESHOLD = 0.5
@@ -177,6 +178,15 @@ with gr.Blocks(title="DentRay AI Backend") as demo:
     )
 
 demo.queue(default_concurrency_limit=1, max_size=8)
+
+# Configure CORS to allow cross-origin requests from frontend
+demo.app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 if __name__ == "__main__":
     demo.launch(css=SPACE_CSS)
