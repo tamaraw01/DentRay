@@ -24,13 +24,28 @@ function getClient(source: string) {
   }
 
   if (!cachedClient || cachedClient.source !== normalizedSource) {
-    cachedClient = {
-      source: normalizedSource,
-      promise: Client.connect(normalizedSource, { hf_token: "" })
-    };
+    const promise = Client.connect(normalizedSource);
+    // Never keep a rejected connection in the cache. Otherwise a single failed
+    // attempt (e.g. the Space waking up from sleep) would be reused for every
+    // retry and the backend would look permanently down until a full reload.
+    void promise.catch(() => {
+      if (cachedClient?.promise === promise) {
+        cachedClient = null;
+      }
+    });
+    cachedClient = { source: normalizedSource, promise };
   }
 
   return cachedClient.promise;
+}
+
+const unreadableResultMessage = "Hasil belum dapat dibaca. Coba lagi.";
+
+function describeError(error: unknown) {
+  if (error instanceof Error) {
+    return error.message;
+  }
+  return typeof error === "string" ? error : "kesalahan tidak diketahui";
 }
 
 export async function checkHuggingFaceBackend(source: string) {
@@ -44,8 +59,21 @@ export async function checkHuggingFaceBackend(source: string) {
 }
 
 export async function predictWithHuggingFace(file: File, source: string): Promise<PredictionResponse> {
+  // Stage 1: connect. A failure here means the URL is wrong or the Space is
+  // unreachable/asleep — surface that distinctly from a prediction failure.
+  let client: Awaited<ReturnType<typeof getClient>>;
   try {
-    const client = await getClient(source);
+    client = await getClient(source);
+  } catch (connectError) {
+    cachedClient = null;
+    console.error("[DentRay] connect error:", connectError);
+    throw new Error(
+      `Tidak dapat terhubung ke backend AI. Periksa URL Space (format https://nama-space.hf.space) dan pastikan Space aktif. (${describeError(connectError)})`
+    );
+  }
+
+  // Stage 2: predict.
+  try {
     const result = await client.predict<unknown[]>("/predict", [handle_file(file)]);
     const prediction = parseDentRayGradioResponse(result);
 
@@ -68,14 +96,12 @@ export async function predictWithHuggingFace(file: File, source: string): Promis
 
     return prediction;
   } catch (error) {
-    // Temporary debug logging to help surface raw Gradio/connection errors in browser console
-    // Remove this after debugging once the issue is resolved.
-    // eslint-disable-next-line no-console
     console.error("[DentRay] predict error:", error);
-    if (error instanceof Error && error.message === "Hasil belum dapat dibaca. Coba lagi.") {
+
+    if (error instanceof Error && error.message === unreadableResultMessage) {
       throw error;
     }
 
-    throw new Error("Backend AI sedang tidak tersedia. Tunggu beberapa saat, lalu coba kembali.");
+    throw new Error(`Backend AI gagal memproses gambar. (${describeError(error)})`);
   }
 }
