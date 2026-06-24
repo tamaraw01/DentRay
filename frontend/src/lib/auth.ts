@@ -86,8 +86,16 @@ export async function signUpWithEmail(email: string, password: string, fullName:
 export async function sendPasswordReset(email: string) {
   const client = requireSupabaseClient();
   const { error } = await client.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/?mode=signin`
+    redirectTo: `${window.location.origin}/reset-password`
   });
+  if (error) {
+    throw new Error(normalizeAuthError(error.message));
+  }
+}
+
+export async function updatePassword(password: string) {
+  const client = requireSupabaseClient();
+  const { error } = await client.auth.updateUser({ password });
   if (error) {
     throw new Error(normalizeAuthError(error.message));
   }
