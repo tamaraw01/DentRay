@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     default: brandConfig.appName,
     template: `%s | ${brandConfig.appName}`
   },
-  description: "Skrining visual gigi berbasis AI, cukup dari satu foto.",
+  description: "Skrining gigi cerdas, cukup dari satu foto.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,

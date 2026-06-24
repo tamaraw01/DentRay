@@ -132,7 +132,6 @@ export function ScreeningExperience() {
         <Card className="overflow-hidden rounded-[1.9rem] p-0">
           <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
             <BrandLogo showText size="sm" />
-            <span className="rounded-full border border-clinical-100 bg-clinical-50 px-3 py-1 text-xs font-bold text-clinical-700">AI</span>
           </div>
 
           <div className="m-3 rounded-[1.6rem] border border-slate-100 bg-slate-50/80 p-5 sm:m-4 sm:p-7">

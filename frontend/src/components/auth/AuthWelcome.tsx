@@ -109,7 +109,7 @@ export function AuthWelcome() {
               <h1 className="text-[3.05rem] font-bold leading-[1] tracking-[-0.055em] text-slate-950">
                 Deteksi dini, senyum terjaga.
               </h1>
-              <p className="mt-4 text-base font-medium leading-7 text-slate-600">Skrining visual gigi berbasis AI, cukup dari satu foto.</p>
+              <p className="mt-4 text-base font-medium leading-7 text-slate-600">Skrining gigi cerdas, cukup dari satu foto.</p>
               <p className="mt-3 text-sm font-semibold text-slate-500">Skrining awal, bukan pengganti dokter gigi.</p>
             </div>
           </div>

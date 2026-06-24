@@ -67,7 +67,7 @@ export function DetectionExample({
       <div className="mb-3 flex items-center justify-between gap-3">
         <p className="text-sm font-extrabold text-slate-950">Contoh Hasil</p>
         <span className="rounded-full border border-clinical-200/80 bg-clinical-50/70 px-3 py-1 text-xs font-bold text-clinical-700">
-          AI
+          Sebelum &amp; Sesudah
         </span>
       </div>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

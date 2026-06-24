@@ -134,12 +134,9 @@ export function SingleImageScan() {
 
   return (
     <div className="space-y-5">
-      <header className="flex items-center justify-between gap-4 px-1">
-        <div>
-          <h1 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 sm:text-[1.7rem]">Skrining Gigi</h1>
-          <p className="mt-1 text-sm text-slate-500">Cukup satu foto gigi yang jelas.</p>
-        </div>
-        <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-clinical-700">AI</span>
+      <header className="px-1">
+        <h1 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 sm:text-[1.7rem]">Skrining Gigi</h1>
+        <p className="mt-1 text-sm text-slate-500">Cukup satu foto gigi yang jelas.</p>
       </header>
 
       {!result && (

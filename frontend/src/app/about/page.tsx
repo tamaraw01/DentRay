@@ -11,7 +11,7 @@ export default function AboutPage() {
   return (
     <Section
       eyebrow="Tentang DentRay"
-      title="Skrining Gigi Berbasis AI"
+      title="Skrining Gigi Cerdas"
       description="Deteksi area mencurigakan dari satu foto gigi."
     >
       <div className="grid gap-5 md:grid-cols-[1.05fr_0.95fr]">
@@ -20,7 +20,7 @@ export default function AboutPage() {
             <Glyph name="scan" />
           </IconBadge>
           <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em] text-slate-950">Visualisasi area yang perlu diperhatikan.</h2>
-          <p className="mt-2 leading-7 text-slate-600">Foto gigi dianalisis AI. Area terdeteksi ditandai secara visual.</p>
+          <p className="mt-2 leading-7 text-slate-600">Foto gigi dianalisis secara otomatis. Area terdeteksi ditandai dengan jelas.</p>
         </Card>
         <Card>
           <IconBadge tone="red">

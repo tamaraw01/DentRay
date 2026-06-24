@@ -18,8 +18,8 @@ const workflow = [
   {
     icon: "scan",
     tone: "green" as BadgeTone,
-    title: "AI Menganalisis Gambar",
-    body: "AI mendeteksi area yang mencurigakan."
+    title: "Analisis Cerdas",
+    body: "Area yang mencurigakan dikenali secara otomatis."
   },
   {
     icon: "spark",
