@@ -71,27 +71,23 @@ export function ProfilePanel() {
         ))}
       </div>
 
-      {/* Install */}
-      <div className="glass-card flex items-center gap-4 rounded-[1.75rem] p-5">
-        <IconBadge tone="violet">
-          <Glyph name="spark" />
-        </IconBadge>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-bold text-slate-900">Pasang Aplikasi</p>
-          <p className="mt-0.5 text-xs leading-5 text-slate-500">
-            {isStandalone ? "Aplikasi sudah terpasang." : "Akses DentRay lebih cepat dari layar utama."}
-          </p>
+      {/* Install — only shown while the app is not yet installed */}
+      {!isStandalone && (
+        <div className="glass-card flex items-center gap-4 rounded-[1.75rem] p-5">
+          <IconBadge tone="violet">
+            <Glyph name="spark" />
+          </IconBadge>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-bold text-slate-900">Pasang Aplikasi</p>
+            <p className="mt-0.5 text-xs leading-5 text-slate-500">
+              Akses DentRay lebih cepat dari layar utama.
+            </p>
+          </div>
+          <Button className="shrink-0" onClick={showPrompt} type="button">
+            Pasang
+          </Button>
         </div>
-        <Button
-          className="shrink-0"
-          disabled={isStandalone}
-          onClick={showPrompt}
-          type="button"
-          variant={isStandalone ? "secondary" : "primary"}
-        >
-          {isStandalone ? "Terpasang" : "Pasang"}
-        </Button>
-      </div>
+      )}
 
       {/* Medical note */}
       <div className="glass-card flex items-start gap-4 rounded-[1.75rem] p-5">
