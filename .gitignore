@@ -1,4 +1,12 @@
 .DS_Store
+
+# Local assistant instructions are not public project documentation.
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.hermes/
+.claude/
+.composio/
 .env*
 !.env.example
 !**/.env.example
