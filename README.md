@@ -27,8 +27,10 @@ supabase/             SQL schema tabel dan RLS
 - `/login`
 - `/signup`
 - `/forgot-password`
+- `/reset-password` form password baru dari link email reset
+- `/screening` skrining tanpa login
 - `/app` homepage pribadi
-- `/app/scan` scan gigi multi-view
+- `/app/scan` skrining satu foto gigi lewat kamera atau unggah
 - `/app/history`
 - `/app/history/[id]`
 - `/app/profile`
@@ -85,7 +87,8 @@ Model produksi Hugging Face berada di:
 hf-dentray-backend/models/dentray_unet_model.keras
 ```
 
-Salinan model FastAPI fallback berada di:
+FastAPI fallback mencari model di path berikut. File ini tidak ada di repository, jadi
+salin model ke sana sebelum menjalankan `backend/`:
 
 ```text
 backend/models/dentray_unet_model.keras
@@ -94,7 +97,7 @@ backend/models/dentray_unet_model.keras
 Aplikasi tidak melakukan training model. Backend hanya memuat model `.keras` dengan
 `compile=False` untuk inference segmentasi karies.
 
-Ukuran model saat ini sekitar 372 MB, sehingga file harus disimpan menggunakan Git LFS jika repository dipush ke GitHub:
+Ukuran model saat ini sekitar 124 MB, sehingga file harus disimpan menggunakan Git LFS jika repository dipush ke GitHub:
 
 ```bash
 git lfs install
@@ -219,7 +222,9 @@ Proteksi route:
 2. Pilih SDK **Gradio**.
 3. Pilih hardware gratis **CPU Basic**.
 4. Upload seluruh isi folder `hf-dentray-backend/` ke root repository Space.
-5. Pastikan model ada di `models/dentray_unet_model.keras`.
+5. Pindahkan model ke root Space sebagai `dentray_unet_model.keras`, sejajar dengan
+   `app.py`. `app.py` memuat model dari folder yang sama dengan dirinya, bukan dari
+   `models/`.
 6. Tunggu build selesai dan status Space menjadi **Running**.
 7. Buka **View API** dan pastikan endpoint `/predict` tersedia.
 
@@ -336,12 +341,11 @@ Frontend:
 ## Bagian Manual
 
 - Upload isi `hf-dentray-backend/` ke Space Gradio.
-- Pastikan `hf-dentray-backend/models/dentray_unet_model.keras` terunggah.
+- Pastikan model terunggah di root Space sebagai `dentray_unet_model.keras`.
 - Isi environment variable Supabase di Vercel.
 - Isi `NEXT_PUBLIC_AI_BACKEND_URL` dengan URL `.hf.space`.
 - Kosongkan `NEXT_PUBLIC_API_BASE_URL` saat memakai Hugging Face.
 - Atur Site URL dan Redirect URLs di Supabase.
-- Tambahkan contoh dataset ke `frontend/public/examples/tooth-original.png`, `tooth-mask.png`, dan `tooth-overlay.png` jika sudah tersedia.
 - Jika ingin penyimpanan gambar produksi, siapkan Supabase Storage dan ubah helper upload dari data URL ke URL storage.
 
 ## Catatan Medis

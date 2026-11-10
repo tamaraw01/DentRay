@@ -33,7 +33,9 @@ dentray_unet_model.keras
 2. Pilih SDK **Gradio**.
 3. Pilih hardware **CPU Basic**.
 4. Upload seluruh isi folder `hf-dentray-backend/` ke root repository Space.
-5. Pastikan model tersedia di `models/dentray_unet_model.keras`.
+5. Pastikan model tersedia di root Space sebagai `dentray_unet_model.keras`, sejajar
+   dengan `app.py`. Di repository GitHub file ini ada di `models/`, tetapi `app.py`
+   memuatnya dari folder yang sama dengan `app.py`.
 6. Tunggu proses build dan status Space menjadi **Running**.
 7. Buka **Use via API** atau **View API** untuk memastikan endpoint `/predict` tersedia.
 
@@ -41,8 +43,8 @@ Model berukuran besar. Gunakan Git LFS saat push melalui Git:
 
 ```bash
 git lfs install
-git lfs track "models/dentray_unet_model.keras"
-git add .gitattributes models/dentray_unet_model.keras
+git lfs track "dentray_unet_model.keras"
+git add .gitattributes dentray_unet_model.keras
 git commit -m "Add DentRay inference model"
 git push
 ```
